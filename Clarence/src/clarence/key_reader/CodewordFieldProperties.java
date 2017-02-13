@@ -20,6 +20,8 @@ package clarence.key_reader;
 import java.util.ArrayList;
 
 public class CodewordFieldProperties implements FieldValueProperties {
+	
+	//test
 
 	private ArrayList<SymbolEntry> allowedValues;
 	

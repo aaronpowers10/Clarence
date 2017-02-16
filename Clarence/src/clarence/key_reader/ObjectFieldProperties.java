@@ -24,9 +24,8 @@ public class ObjectFieldProperties extends FieldValueProperties{
 	private CommandEntry commandEntry;
 	private ArrayList<String> allowedTypes;
 	
-	public ObjectFieldProperties(CommandEntry commandEntry, ArrayList<String> allowedTypes,int defaultType, int defaultValue,
-			ExpressionTable expressionTable){
-		super(defaultType,defaultValue,expressionTable);
+	public ObjectFieldProperties(CommandEntry commandEntry, ArrayList<String> allowedTypes){
+		super();
 		this.commandEntry = commandEntry;
 		this.allowedTypes = allowedTypes;
 	}

@@ -19,9 +19,8 @@ package clarence.key_reader;
 
 public class StringFieldProperties extends FieldValueProperties {
 	
-	public StringFieldProperties(int defaultType, int defaultValue,
-			ExpressionTable expressionTable){
-		super(defaultType,defaultValue,expressionTable);
+	public StringFieldProperties(){
+		super();
 	}
 	
 	@Override

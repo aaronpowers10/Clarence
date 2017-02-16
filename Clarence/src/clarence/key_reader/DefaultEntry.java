@@ -23,16 +23,22 @@ import java.util.ArrayList;
 public class DefaultEntry {
 	
 	private ArrayList<TypeDefaultEntry> defaultEntries;
+	private String commandName;
 	
-	public DefaultEntry(ByteBuffer buffer, int numVals, int numTypes){
+	public DefaultEntry(ByteBuffer buffer, CommandEntry commandEntry){
+		commandName = commandEntry.name();
 		defaultEntries = new ArrayList<TypeDefaultEntry>();
-		for(int i=0;i<numTypes;i++){
-			defaultEntries.add(new TypeDefaultEntry(buffer,numVals));
+		for(int i=0;i<commandEntry.numTypes();i++){
+			defaultEntries.add(new TypeDefaultEntry(buffer,commandEntry.valueLength()));
 		}
 	}
 	
 	public TypeDefaultEntry defaultEntry(int type){
 		return defaultEntries.get(type);
+	}
+	
+	public String commandName(){
+		return commandName;
 	}
 
 }

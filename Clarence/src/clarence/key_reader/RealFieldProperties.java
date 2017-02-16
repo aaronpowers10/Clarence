@@ -22,9 +22,8 @@ public class RealFieldProperties extends FieldValueProperties {
 	private float min;
 	private float max;
 
-	public RealFieldProperties(float min, float max, int defaultType, int defaultValue,
-			ExpressionTable expressionTable) {
-		super(defaultType,defaultValue,expressionTable);
+	public RealFieldProperties(float min, float max) {
+		super();
 		this.min = min;
 		this.max = max;
 	}

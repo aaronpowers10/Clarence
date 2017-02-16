@@ -24,13 +24,13 @@ public class SymbolTable {
 	
 	private ArrayList<SymbolEntry> symbols;
 	
-	public SymbolTable(ByteBuffer buffer, int initialSize){
+	public SymbolTable(ByteBuffer buffer, int size){
 		symbols = new ArrayList<SymbolEntry>();
-		read(buffer,initialSize);
+		read(buffer,size);
 	}
 	
-	private void read(ByteBuffer buffer, int initialSize) {
-		for (int i = 0; i < initialSize; i++) {
+	private void read(ByteBuffer buffer, int size) {
+		for (int i = 0; i < size; i++) {
 			symbols.add(new SymbolEntry(buffer));
 		}
 	}

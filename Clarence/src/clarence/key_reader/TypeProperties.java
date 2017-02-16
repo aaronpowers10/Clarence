@@ -25,24 +25,19 @@ public class TypeProperties {
 	private ArrayList<FieldProperties> fieldPropertiesList;
 	private int typeIndex;
 
-	public TypeProperties(CommandEntry commandEntry, KeywordTable keywordTable, int typeIndex, SymbolTable symbolTable,
-			CommandTable commandTable, DefaultTable defaultTable, ExpressionTable expressionTable, int commandIndex) {
+	public TypeProperties(int commandIndex, int typeIndex, DOE2Tables doe2Tables) {
+		CommandEntry commandEntry = doe2Tables.commandEntry(commandIndex);
 		this.name = commandEntry.name();
 		this.abbreviation = commandEntry.abbreviation();
 		this.typeIndex = typeIndex;
-		int typeKeyIndex = typeIndex-1;
 		int typeOffset = 0;
 		if(commandEntry.uniqueKeys()){
 			typeOffset = (typeIndex-1)*commandEntry.numKeys();
-		} else {
-			//typeKeyIndex = 0;
-		}
-		FieldValuePropertiesFactory valueFactory = new FieldValuePropertiesFactory(symbolTable,commandTable,defaultTable,expressionTable,commandIndex,typeKeyIndex);
+		} 
+		FieldValuePropertiesFactory valueFactory = new FieldValuePropertiesFactory(commandEntry,typeIndex-1,doe2Tables);
 		fieldPropertiesList = new ArrayList<FieldProperties>();
 		for (int i = 0; i < commandEntry.numKeys(); i++) {
-			
-			KeywordEntry keywordEntry = keywordTable.get(commandEntry.startKeys() + i + typeOffset);
-			System.out.println(keywordEntry.name());
+			KeywordEntry keywordEntry = doe2Tables.keywordEntry(commandEntry.startKeys() + i + typeOffset);
 			String fieldName = keywordEntry.name();
 			String fieldAbbreviation = keywordEntry.abbreviation();	
 			fieldPropertiesList.add(new FieldProperties(fieldName,fieldAbbreviation,valueFactory.create(keywordEntry)));

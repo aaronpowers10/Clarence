@@ -24,14 +24,23 @@ public class CommandTable {
 	
 	private ArrayList<CommandEntry> commands;
 
-	public CommandTable(ByteBuffer buffer, int size, int keyOffset, int defaultOffset) {
+	public CommandTable(ByteBuffer buffer, int size, LengthData lengthData) {
 		commands = new ArrayList<CommandEntry>();
-		read(buffer, size, keyOffset,defaultOffset);
+		read(buffer, size,lengthData);
 	}
 
-	private void read(ByteBuffer buffer, int size, int keyOffset, int defaultOffset) {
+	private void read(ByteBuffer buffer, int size, LengthData lengthData) {
+		CommandEntry lastCommandWithDefaults = null;
 		for (int i = 0; i < size; i++) {
-			commands.add(new CommandEntry(buffer,keyOffset,defaultOffset));
+			
+			if(i==0){
+				commands.add(new CommandEntry(buffer,lengthData));
+			} else {
+				commands.add(new CommandEntry(buffer,lengthData,lastCommandWithDefaults));
+			}
+			if(commands.get(i).hasDefaults()){
+				lastCommandWithDefaults = commands.get(i);
+			}
 		}
 	}
 

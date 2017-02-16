@@ -23,13 +23,11 @@ public class DOE2DataProperties {
 
 	private ArrayList<TypeProperties> typePropertiesList;
 
-	public DOE2DataProperties(SymbolTable symbolTable, KeywordTable keywordTable, CommandTable commandTable,
-			DefaultTable defaultTable, ExpressionTable expressionTable) {
+	public DOE2DataProperties(DOE2Tables doe2Tables) {
 		typePropertiesList = new ArrayList<TypeProperties>();
-		for (int commandIndex = 0; commandIndex < commandTable.size(); commandIndex++) {
-			for (int typeIndex = 1; typeIndex < commandTable.get(commandIndex).numTypes() + 1; typeIndex++) {
-				TypeProperties typeProperties = new TypeProperties(commandTable.get(commandIndex), keywordTable,
-						typeIndex, symbolTable, commandTable, defaultTable, expressionTable,commandIndex);
+		for (int commandIndex = 0; commandIndex < doe2Tables.numCommands(); commandIndex++) {
+			for (int typeIndex = 1; typeIndex < doe2Tables.commandEntry(commandIndex).numTypes() + 1; typeIndex++) {
+				TypeProperties typeProperties = new TypeProperties(commandIndex,typeIndex,doe2Tables);
 				typePropertiesList.add(typeProperties);
 			}
 		}

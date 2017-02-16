@@ -22,7 +22,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class CommandEntry {
-	
+
 	private String name;
 	private String abbreviation;
 	private int iop;
@@ -38,35 +38,41 @@ public class CommandEntry {
 	private int parentClass;
 	private int defaultLength;
 	private int numTypes;
-	private int keyOffset;
-	private int defaultOffset;
-	
-	public CommandEntry(ByteBuffer buffer, int keyOffset, int defaultOffset){
-		this.keyOffset = keyOffset;
-		this.defaultOffset = defaultOffset;
+	private LengthData lengthData;
+	private boolean hasDefaults;
+
+	public CommandEntry(ByteBuffer buffer, LengthData lengthData) {
+		this.lengthData = lengthData;
 		read(buffer);
+		hasDefaults = true;
 	}
-	
-	private void read(ByteBuffer buffer){
-		ByteBuffer nameBuffer = ByteBuffer.allocate(4*4);
+
+	public CommandEntry(ByteBuffer buffer, LengthData lengthData, CommandEntry previousEntry) {
+		this.lengthData = lengthData;
+		read(buffer);
+		determineIfHasDefaults(previousEntry);
+	}
+
+	private void read(ByteBuffer buffer) {
+		ByteBuffer nameBuffer = ByteBuffer.allocate(4 * 4);
 		nameBuffer.order(ByteOrder.LITTLE_ENDIAN);
 		for (int i = 0; i < 4; i++) {
 			nameBuffer.putInt(buffer.getInt());
 		}
-		
-		ByteBuffer abbreviationBuffer = ByteBuffer.allocate(4*2);
+
+		ByteBuffer abbreviationBuffer = ByteBuffer.allocate(4 * 2);
 		abbreviationBuffer.order(ByteOrder.LITTLE_ENDIAN);
 		for (int i = 0; i < 2; i++) {
 			abbreviationBuffer.putInt(buffer.getInt());
 		}
-		
+
 		try {
 			name = new String(nameBuffer.array(), "ASCII").trim();
 			abbreviation = new String(abbreviationBuffer.array(), "ASCII").trim();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
+
 		iop = buffer.getInt();
 		level = buffer.getInt();
 		startKeys = buffer.getInt();
@@ -84,86 +90,114 @@ public class CommandEntry {
 		buffer.getInt();
 		buffer.getInt();
 		defaultLength = buffer.getInt();
-		numTypes = buffer.getInt();		
-		if(numTypes == 0){
+		numTypes = buffer.getInt();
+		if (numTypes == 0) {
 			numTypes = 1;
 		}
 	}
-	
-	public String name(){
+
+	private void determineIfHasDefaults(CommandEntry previousEntry) {
+		/*
+		 * Deprecated commands from DOE2.1 still appear in the command table but
+		 * do not have entries in the default table. These can be identified by
+		 * having a defaultTableStart which is out of sequence with the previous
+		 * command.
+		 */
+
+		if(numKeys() > 0){
+			if ((this.defaultTableStart() == previousEntry.defaultTableStart()
+					+ previousEntry.valueLength() * previousEntry.numTypes() * 4)) {
+				hasDefaults = true;
+			} else {
+				hasDefaults = false;
+			}
+		} else {
+			hasDefaults = false;
+		}
+		if (name.equals("DESIGN-DAY")) {
+			System.out.println(previousEntry.numKeys());
+			System.out.println("DESIGN-DAY " + hasDefaults);
+		}
+	}
+
+	public String name() {
 		return name;
 	}
-	
-	public String abbreviation(){
+
+	public String abbreviation() {
 		return abbreviation;
 	}
-	
-	public boolean uniqueKeys(){
-		if(numTypes < 0){
+
+	public boolean uniqueKeys() {
+		if (numTypes < 0) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
-	public int iop(){
+
+	public int iop() {
 		return iop;
 	}
-	
-	public int level(){
+
+	public int level() {
 		return level;
 	}
-	
-	public int startKeys(){
-		return startKeys - keyOffset;
+
+	public int startKeys() {
+		return startKeys - lengthData.keywordStart();
 	}
-	
-	public int numKeys(){
+
+	public int numKeys() {
 		return numKeys;
 	}
-	
-	public int typeSym(){
+
+	public int typeSym() {
 		return typeSym;
 	}
-	
-	public int maxDef(){
+
+	public int maxDef() {
 		return maxDef;
 	}
-	
-	public int referenceTableStart(){
+
+	public int referenceTableStart() {
 		return referenceTableStart;
 	}
-	
-	public int defaultTableStart(){
-		return defaultTableStart - defaultOffset;
+
+	public int defaultTableStart() {
+		return defaultTableStart - lengthData.defaultStart();
 	}
-	
-	public int valueLength(){
+
+	public int valueLength() {
 		return valueLength;
 	}
-	
-	public int childClass(){
+
+	public int childClass() {
 		return childClass;
 	}
-	
-	public int parentClass(){
+
+	public int parentClass() {
 		return parentClass;
 	}
-	
-	public int defaultLength(){
+
+	public int defaultLength() {
 		return defaultLength;
 	}
-	
-	public int numTypes(){
+
+	public int numTypes() {
 		return Math.abs(numTypes);
 	}
-	
-	public int numUniqueTypes(){
-		if(uniqueKeys()){
+
+	public int numUniqueTypes() {
+		if (uniqueKeys()) {
 			return numTypes();
 		} else {
 			return 1;
 		}
+	}
+
+	public boolean hasDefaults() {
+		return hasDefaults;
 	}
 
 }

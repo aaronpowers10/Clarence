@@ -23,9 +23,8 @@ public class ListFieldProperties extends FieldValueProperties {
 	
 	private ArrayList<FieldValueProperties> elements;
 	
-	public ListFieldProperties(int defaultType, int defaultValue,
-			ExpressionTable expressionTable){
-		super(defaultType,defaultValue,expressionTable);
+	public ListFieldProperties(){
+		super();
 		elements = new ArrayList<FieldValueProperties>();
 	}
 	

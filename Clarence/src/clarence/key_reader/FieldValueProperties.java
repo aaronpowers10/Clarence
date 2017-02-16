@@ -18,13 +18,16 @@
 package clarence.key_reader;
 
 public abstract class FieldValueProperties {
-	
+
 	private DefaultType defaultType;
 	private int defaultValueInteger;
 	private String defaultExpression;
-	
-	public FieldValueProperties(int defaultTypeInt, int defaultValueInteger,
-			ExpressionTable expressionTable){
+
+	public FieldValueProperties() {
+		defaultType = DefaultType.NO_DEFAULT;
+	}
+
+	public void setDefaults(int defaultTypeInt, int defaultValueInteger, DOE2Tables doe2Tables) {
 		this.defaultValueInteger = defaultValueInteger;
 		if (defaultTypeInt == 1) {
 			defaultType = DefaultType.VALUE;
@@ -40,23 +43,23 @@ public abstract class FieldValueProperties {
 			}
 		} else {
 			defaultType = DefaultType.EXPRESSION;
-			defaultExpression = expressionTable.get(defaultValueInteger).code();
+			defaultExpression = doe2Tables.expressionEntry(defaultValueInteger).code();
 		}
 	}
-	
-	public abstract String fieldType();	
-	
+
+	public abstract String fieldType();
+
 	public abstract String write();
-	
-	public DefaultType defaultType(){
+
+	public DefaultType defaultType() {
 		return defaultType;
 	}
-	
-	protected int defaultValueInteger(){
+
+	protected int defaultValueInteger() {
 		return defaultValueInteger;
 	}
-	
-	public String defaultExpression(){
+
+	public String defaultExpression() {
 		return defaultExpression;
 	}
 

@@ -21,30 +21,38 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class DefaultTable {
-	
+
 	private ArrayList<DefaultEntry> defaultEntries;
-	
-	public DefaultTable(ByteBuffer buffer, CommandTable commandTable){
-		defaultEntries = new ArrayList<DefaultEntry>();		
-		for(int i=0;i<commandTable.size();i++){
-			if( i > 0){
-				if((commandTable.get(i).defaultTableStart() == commandTable.get(i-1).defaultTableStart() + commandTable.get(i-1).valueLength() *
-						commandTable.get(i-1).numTypes()*4)){
-					defaultEntries.add(new DefaultEntry(buffer,commandTable.get(i).valueLength(),commandTable.get(i).numTypes()));
-				}
-			} else {
-				defaultEntries.add(new DefaultEntry(buffer,commandTable.get(i).valueLength(),commandTable.get(i).numTypes()));
+
+	public DefaultTable(ByteBuffer buffer, CommandTable commandTable) {
+		defaultEntries = new ArrayList<DefaultEntry>();
+		for (int i = 0; i < commandTable.size(); i++) {
+			if (commandTable.get(i).hasDefaults()) {
+				defaultEntries.add(new DefaultEntry(buffer, commandTable.get(i)));
 			}
-			
 		}
 	}
+
+//	public DefaultEntry get(int index) {
+//		return defaultEntries.get(index);
+//	}
+//
+//	public TypeDefaultEntry get(int index, int type) {
+//		return defaultEntries.get(index).defaultEntry(type);
+//	}
 	
-	public DefaultEntry get(int index){
-		return defaultEntries.get(index);
+	public DefaultEntry get(String commandName){
+		for(int i=0;i<defaultEntries.size();i++){
+			if(defaultEntries.get(i).commandName().equals(commandName)){
+				return defaultEntries.get(i);
+			}
+		}
+		return null;
 	}
 	
-	public TypeDefaultEntry get(int index, int type){
-		return defaultEntries.get(index).defaultEntry(type);
+	public TypeDefaultEntry get(String commandName, int type){
+		System.out.println("GETTING DEFAULT ENTRY FOR " + commandName + " TYPE " + type);
+		return get(commandName).defaultEntry(type);
 	}
 
 }

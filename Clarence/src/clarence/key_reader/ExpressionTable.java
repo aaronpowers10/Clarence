@@ -35,11 +35,8 @@ public class ExpressionTable {
 	}
 	
 	public ExpressionEntry get(int index){
-		for(int i=0;i<expressionEntries.size();i++){
-			//System.out.println("COMPARING " + index + " " + expressionEntries.get(i).index());
-			
+		for(int i=0;i<expressionEntries.size();i++){			
 			if(expressionEntries.get(i).index() == index){
-				System.out.println(expressionEntries.get(i).code());
 				return expressionEntries.get(i);
 			}
 		}

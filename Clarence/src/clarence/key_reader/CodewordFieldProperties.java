@@ -17,7 +17,6 @@
  */
 package clarence.key_reader;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class CodewordFieldProperties extends FieldValueProperties {
@@ -25,9 +24,8 @@ public class CodewordFieldProperties extends FieldValueProperties {
 	private ArrayList<SymbolEntry> allowedValues;
 	private String defaultValue;
 	
-	public CodewordFieldProperties(ArrayList<SymbolEntry> allowedValues,int defaultType, int defaultValueInt,
-			ExpressionTable expressionTable, SymbolTable symbolTable){
-		super(defaultType,defaultValueInt,expressionTable);
+	public CodewordFieldProperties(ArrayList<SymbolEntry> allowedValues){
+		super();
 		this.allowedValues = allowedValues;
 		if(defaultType() == DefaultType.VALUE){
 			//defaultValue = symbolTable.get(defaultValueInteger()).symbol();
@@ -60,13 +58,15 @@ public class CodewordFieldProperties extends FieldValueProperties {
 		for(int i=0;i<allowedValues.size();i++){
 			output = output + allowedValues.get(i).symbol();
 			if(i<allowedValues.size()-1){
-				output = output + ", ";
+				output = output + ",";
 			}
 		}
 		output = output + System.lineSeparator();
 		output = output + "DEFAULT-TYPE " + defaultType() + System.lineSeparator();
 		if(defaultType() == DefaultType.VALUE){
 			output = output + "DEFAULT-VALUE " + defaultValue + System.lineSeparator();
+		} else if (defaultType() == DefaultType.EXPRESSION) {
+			output = output + "{" + defaultExpression() + "}" + System.lineSeparator();
 		}
 		return output;
 	}

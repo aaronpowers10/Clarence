@@ -22,9 +22,8 @@ public class IntegerFieldProperties extends FieldValueProperties {
 	private float min;
 	private float max;
 	
-	public IntegerFieldProperties(float min, float max,int defaultTypeInt, int defaultValueInt,
-			ExpressionTable expressionTable){
-		super(defaultTypeInt,defaultValueInt,expressionTable);
+	public IntegerFieldProperties(float min, float max){
+		super();
 		this.min = min;
 		this.max = max;
 	}

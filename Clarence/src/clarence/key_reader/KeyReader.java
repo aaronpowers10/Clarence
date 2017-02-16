@@ -18,48 +18,13 @@
 package clarence.key_reader;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Arrays;
 
 public class KeyReader {
 	
 	
 	public static DOE2DataProperties read(String filePath)throws IOException{
-		byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-		
-		int record1Start = 10808 + 4;
-		int record1End = record1Start + 44;
-		ByteBuffer record1Buffer = ByteBuffer.wrap(Arrays.copyOfRange(bytes, record1Start, record1End));
-		record1Buffer.order(ByteOrder.LITTLE_ENDIAN);
-		LengthData lengthData = new LengthData(record1Buffer);
-		
-		int record2Start = record1End + 8;
-		int record2End = record2Start + (lengthData.symbolTableLength()*16 + (lengthData.keywordTableLength())*16+
-				lengthData.commandTableLength()*24)*4; 
-		ByteBuffer record2Buffer = ByteBuffer.wrap(Arrays.copyOfRange(bytes, record2Start, record2End));
-		record2Buffer.order(ByteOrder.LITTLE_ENDIAN);
-		
-		SymbolTable symbolTable = new SymbolTable(record2Buffer,lengthData.symbolTableLength());
-		KeywordTable keywordTable = new KeywordTable(record2Buffer,lengthData.keywordTableLength());
-		CommandTable commandTable = new CommandTable(record2Buffer,lengthData.commandTableLength(),lengthData.keywordStart(),lengthData.defaultStart());
-		
-		int record3Start = record2End + 8;
-		int record3End = record3Start + (lengthData.defaultTableLength())*4;
-		ByteBuffer record3Buffer = ByteBuffer.wrap(Arrays.copyOfRange(bytes, record3Start, record3End));
-		record3Buffer.order(ByteOrder.LITTLE_ENDIAN);
-		DefaultTable defaultTable = new DefaultTable(record3Buffer,commandTable);
-			
-		int record4Start = record3End + 8;
-		int record4End = record4Start + (lengthData.expressionTableLength())*4;
-		ByteBuffer record4Buffer = ByteBuffer.wrap(Arrays.copyOfRange(bytes, record4Start, record4End));
-		record4Buffer.order(ByteOrder.LITTLE_ENDIAN);
-		ExpressionTable expressionTable = new ExpressionTable(record4Buffer,lengthData.expressionTableLength(),lengthData.expressionStart());
-		
-		return new DOE2DataProperties(symbolTable,keywordTable,commandTable,defaultTable,expressionTable);
-
+		DOE2Tables doe2Tables = new DOE2Tables(filePath);		
+		return new DOE2DataProperties(doe2Tables);
 	}
 
 

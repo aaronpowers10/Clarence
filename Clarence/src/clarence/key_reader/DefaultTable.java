@@ -27,7 +27,15 @@ public class DefaultTable {
 	public DefaultTable(ByteBuffer buffer, CommandTable commandTable){
 		defaultEntries = new ArrayList<DefaultEntry>();		
 		for(int i=0;i<commandTable.size();i++){
-			defaultEntries.add(new DefaultEntry(buffer,commandTable.get(i).valueLength(),commandTable.get(i).numTypes()));
+			if( i > 0){
+				if((commandTable.get(i).defaultTableStart() == commandTable.get(i-1).defaultTableStart() + commandTable.get(i-1).valueLength() *
+						commandTable.get(i-1).numTypes()*4)){
+					defaultEntries.add(new DefaultEntry(buffer,commandTable.get(i).valueLength(),commandTable.get(i).numTypes()));
+				}
+			} else {
+				defaultEntries.add(new DefaultEntry(buffer,commandTable.get(i).valueLength(),commandTable.get(i).numTypes()));
+			}
+			
 		}
 	}
 	

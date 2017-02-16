@@ -39,7 +39,7 @@ public class SymbolEntry {
 		}
 		
 		try {
-			symbol = new String(symbolBuffer.array(), "ASCII");
+			symbol = new String(symbolBuffer.array(), "ASCII").trim();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

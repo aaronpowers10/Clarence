@@ -17,7 +17,47 @@
  */
 package clarence.key_reader;
 
-public interface FieldValueProperties {
+public abstract class FieldValueProperties {
 	
+	private DefaultType defaultType;
+	private int defaultValueInteger;
+	private String defaultExpression;
+	
+	public FieldValueProperties(int defaultTypeInt, int defaultValueInteger,
+			ExpressionTable expressionTable){
+		this.defaultValueInteger = defaultValueInteger;
+		if (defaultTypeInt == 1) {
+			defaultType = DefaultType.VALUE;
+			Float defaultValueFloat = IntToFloat.convert(defaultValueInteger);
+			if (defaultValueFloat == -99999.0) {
+				defaultType = DefaultType.REQUIRED;
+			} else if (defaultValueFloat == -88888.0) {
+				defaultType = DefaultType.UNUSED;
+			} else if (defaultValueFloat == -77777.0) {
+				defaultType = DefaultType.NO_DEFAULT;
+			} else if (defaultValueFloat == -66666.0) {
+				defaultType = DefaultType.UNFILLED;
+			}
+		} else {
+			defaultType = DefaultType.EXPRESSION;
+			defaultExpression = expressionTable.get(defaultValueInteger).code();
+		}
+	}
+	
+	public abstract String fieldType();	
+	
+	public abstract String write();
+	
+	public DefaultType defaultType(){
+		return defaultType;
+	}
+	
+	protected int defaultValueInteger(){
+		return defaultValueInteger;
+	}
+	
+	public String defaultExpression(){
+		return defaultExpression;
+	}
 
 }

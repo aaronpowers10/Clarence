@@ -40,5 +40,18 @@ public class FieldProperties {
 	public FieldValueProperties valueProperties(){
 		return valueProperties;
 	}
+	
+	public String type(){
+		return valueProperties.fieldType();
+	}
+	
+	public String write(){
+		String output = "";
+		output = output + "KEYWORD-DEFINITION " + name + System.lineSeparator();
+		output = output + "KEYWORD-TYPE " + type() + System.lineSeparator();
+		output = output + valueProperties.write();
+		output = output + System.lineSeparator();
+		return output;
+	}
 
 }

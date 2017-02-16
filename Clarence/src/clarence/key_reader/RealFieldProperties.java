@@ -17,24 +17,47 @@
  */
 package clarence.key_reader;
 
-public class RealFieldProperties implements FieldValueProperties {
-	
-	private double min;
-	private double max;
-	
-	public RealFieldProperties(double min, double max){
+public class RealFieldProperties extends FieldValueProperties {
+
+	private float min;
+	private float max;
+
+	public RealFieldProperties(float min, float max, int defaultType, int defaultValue,
+			ExpressionTable expressionTable) {
+		super(defaultType,defaultValue,expressionTable);
 		this.min = min;
 		this.max = max;
 	}
-	
-	public double min(){
+
+	public double min() {
 		return min;
 	}
-	
-	public double max(){
+
+	public double max() {
 		return max;
 	}
 	
-	
+	public float defaultValue(){
+		return IntToFloat.convert(defaultValueInteger());
+	}
+
+	@Override
+	public String fieldType() {
+		return "REAL";
+	}
+
+	@Override
+	public String write() {
+		String output = "";
+		output = output + "MIN " + min + System.lineSeparator();
+		output = output + "MAX " + max + System.lineSeparator();
+		output = output + "DEFAULT-TYPE " + defaultType() + System.lineSeparator();
+		if (defaultType() == DefaultType.VALUE) {
+			output = output + "DEFAULT-VALUE " + defaultValue() + System.lineSeparator();
+		} else if (defaultType() == DefaultType.EXPRESSION) {
+			output = output + "{" + defaultExpression() + "}" + System.lineSeparator();
+		}
+		return output;
+	}
 
 }

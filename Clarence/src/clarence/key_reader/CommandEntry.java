@@ -39,9 +39,11 @@ public class CommandEntry {
 	private int defaultLength;
 	private int numTypes;
 	private int keyOffset;
+	private int defaultOffset;
 	
-	public CommandEntry(ByteBuffer buffer, int keyOffset){
+	public CommandEntry(ByteBuffer buffer, int keyOffset, int defaultOffset){
 		this.keyOffset = keyOffset;
+		this.defaultOffset = defaultOffset;
 		read(buffer);
 	}
 	
@@ -59,8 +61,8 @@ public class CommandEntry {
 		}
 		
 		try {
-			name = new String(nameBuffer.array(), "ASCII");
-			abbreviation = new String(abbreviationBuffer.array(), "ASCII");
+			name = new String(nameBuffer.array(), "ASCII").trim();
+			abbreviation = new String(abbreviationBuffer.array(), "ASCII").trim();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -82,8 +84,10 @@ public class CommandEntry {
 		buffer.getInt();
 		buffer.getInt();
 		defaultLength = buffer.getInt();
-		numTypes = Math.abs(buffer.getInt());
-		
+		numTypes = buffer.getInt();		
+		if(numTypes == 0){
+			numTypes = 1;
+		}
 	}
 	
 	public String name(){
@@ -92,6 +96,14 @@ public class CommandEntry {
 	
 	public String abbreviation(){
 		return abbreviation;
+	}
+	
+	public boolean uniqueKeys(){
+		if(numTypes < 0){
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public int iop(){
@@ -123,7 +135,7 @@ public class CommandEntry {
 	}
 	
 	public int defaultTableStart(){
-		return defaultTableStart;
+		return defaultTableStart - defaultOffset;
 	}
 	
 	public int valueLength(){
@@ -143,7 +155,15 @@ public class CommandEntry {
 	}
 	
 	public int numTypes(){
-		return numTypes;
+		return Math.abs(numTypes);
+	}
+	
+	public int numUniqueTypes(){
+		if(uniqueKeys()){
+			return numTypes();
+		} else {
+			return 1;
+		}
 	}
 
 }

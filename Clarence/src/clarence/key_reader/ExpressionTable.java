@@ -24,10 +24,10 @@ public class ExpressionTable {
 	
 	private ArrayList<ExpressionEntry> expressionEntries;
 	
-	public ExpressionTable(ByteBuffer buffer, int size){
+	public ExpressionTable(ByteBuffer buffer, int size, int startIndex){
 		expressionEntries = new ArrayList<ExpressionEntry>();
-		int index = 1;
-		while(index < size){
+		int index = startIndex+1;
+		while(index < size + startIndex){
 			ExpressionEntry entry = new ExpressionEntry(buffer,index);
 			expressionEntries.add(entry);
 			index = index + entry.entryLength();
@@ -36,11 +36,18 @@ public class ExpressionTable {
 	
 	public ExpressionEntry get(int index){
 		for(int i=0;i<expressionEntries.size();i++){
+			//System.out.println("COMPARING " + index + " " + expressionEntries.get(i).index());
+			
 			if(expressionEntries.get(i).index() == index){
+				System.out.println(expressionEntries.get(i).code());
 				return expressionEntries.get(i);
 			}
 		}
 		return null;
+	}
+	
+	public int size(){
+		return expressionEntries.size();
 	}
 
 }

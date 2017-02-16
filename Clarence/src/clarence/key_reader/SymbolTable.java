@@ -39,12 +39,16 @@ public class SymbolTable {
 		return symbols.size();
 	}
 	
+	public SymbolEntry get(int index){
+		return symbols.get(index-1);
+	}
+	
 	public ArrayList<SymbolEntry> getListOfType(int type){
 		ArrayList<SymbolEntry> matches = new ArrayList<SymbolEntry>();
 		for(int i=0;i<size();i++){
 			if(symbols.get(i).type() == type){
 				matches.add(symbols.get(i));
-			}
+			} 
 		}
 		return matches;
 	}

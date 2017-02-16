@@ -17,22 +17,47 @@
  */
 package clarence.key_reader;
 
-public class IntegerFieldProperties implements FieldValueProperties {
+public class IntegerFieldProperties extends FieldValueProperties {
 	
-	private double min;
-	private double max;
+	private float min;
+	private float max;
 	
-	public IntegerFieldProperties(double min, double max){
+	public IntegerFieldProperties(float min, float max,int defaultTypeInt, int defaultValueInt,
+			ExpressionTable expressionTable){
+		super(defaultTypeInt,defaultValueInt,expressionTable);
 		this.min = min;
 		this.max = max;
 	}
 	
-	public double min(){
-		return min;
+	public int min(){
+		return (int)min;
 	}
 	
-	public double max(){
-		return max;
+	public int max(){
+		return (int)max;
+	}
+	
+	public int defaultValue(){
+		return (int)IntToFloat.convert(defaultValueInteger());
+	}
+	
+	@Override
+	public String fieldType() {
+		return "INTEGER";
+	}
+
+	@Override
+	public String write() {
+		String output = "";
+		output = output + "MIN " + min + System.lineSeparator();
+		output = output + "MAX " + max + System.lineSeparator();
+		output = output + "DEFAULT-TYPE " + defaultType() + System.lineSeparator();
+		if (defaultType() == DefaultType.VALUE) {
+			output = output + "DEFAULT-VALUE " + defaultValue() + System.lineSeparator();
+		} else if(defaultType() == DefaultType.EXPRESSION) {
+			output = output + "{" + defaultExpression() + "}" + System.lineSeparator();
+		}
+		return output;
 	}
 
 }

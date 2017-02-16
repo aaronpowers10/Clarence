@@ -76,6 +76,10 @@ public class LengthData {
 		return expressionEnd - expressionStart + 1;
 	}
 	
+	public int expressionStart(){
+		return expressionStart;
+	}
+	
 	public int symbolTableLength(){
 		return symbolTableLength;
 	}
@@ -86,6 +90,10 @@ public class LengthData {
 	
 	public int keywordStart(){
 		return keywordStart;
+	}
+	
+	public int defaultStart(){
+		return defaultStart;
 	}
 
 }

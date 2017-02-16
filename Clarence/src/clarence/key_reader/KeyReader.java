@@ -44,7 +44,7 @@ public class KeyReader {
 		
 		SymbolTable symbolTable = new SymbolTable(record2Buffer,lengthData.symbolTableLength());
 		KeywordTable keywordTable = new KeywordTable(record2Buffer,lengthData.keywordTableLength());
-		CommandTable commandTable = new CommandTable(record2Buffer,lengthData.commandTableLength(),lengthData.keywordStart());
+		CommandTable commandTable = new CommandTable(record2Buffer,lengthData.commandTableLength(),lengthData.keywordStart(),lengthData.defaultStart());
 		
 		int record3Start = record2End + 8;
 		int record3End = record3Start + (lengthData.defaultTableLength())*4;
@@ -56,7 +56,7 @@ public class KeyReader {
 		int record4End = record4Start + (lengthData.expressionTableLength())*4;
 		ByteBuffer record4Buffer = ByteBuffer.wrap(Arrays.copyOfRange(bytes, record4Start, record4End));
 		record4Buffer.order(ByteOrder.LITTLE_ENDIAN);
-		ExpressionTable expressionTable = new ExpressionTable(record4Buffer,lengthData.expressionTableLength());
+		ExpressionTable expressionTable = new ExpressionTable(record4Buffer,lengthData.expressionTableLength(),lengthData.expressionStart());
 		
 		return new DOE2DataProperties(symbolTable,keywordTable,commandTable,defaultTable,expressionTable);
 

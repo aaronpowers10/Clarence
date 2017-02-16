@@ -17,14 +17,21 @@
  */
 package clarence.key_reader;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-public class CodewordFieldProperties implements FieldValueProperties {
+public class CodewordFieldProperties extends FieldValueProperties {
 	
 	private ArrayList<SymbolEntry> allowedValues;
+	private String defaultValue;
 	
-	public CodewordFieldProperties(ArrayList<SymbolEntry> allowedValues){
+	public CodewordFieldProperties(ArrayList<SymbolEntry> allowedValues,int defaultType, int defaultValueInt,
+			ExpressionTable expressionTable, SymbolTable symbolTable){
+		super(defaultType,defaultValueInt,expressionTable);
 		this.allowedValues = allowedValues;
+		if(defaultType() == DefaultType.VALUE){
+			//defaultValue = symbolTable.get(defaultValueInteger()).symbol();
+		}
 	}
 	
 	public int numAllowedValues(){
@@ -32,7 +39,38 @@ public class CodewordFieldProperties implements FieldValueProperties {
 	}
 	
 	public String allowedValue(int index){
-		return allowedValues.get(index).symbol();
+		for(int i=0;i<allowedValues.size();i++){
+			if(allowedValues.get(i).value() == index){
+				return allowedValues.get(i).symbol();
+			}
+		}
+		return "NULL";
 	}
+
+	@Override
+	public String fieldType() {
+		return "CODEWORD";
+	}
+
+	@Override
+	public String write() {
+		String output = "";
+		output = output + "NUMBER-OF-ALLOWED-VALUES " + numAllowedValues() + System.lineSeparator();
+		output = output + "ALLOWED-VALUES ";
+		for(int i=0;i<allowedValues.size();i++){
+			output = output + allowedValues.get(i).symbol();
+			if(i<allowedValues.size()-1){
+				output = output + ", ";
+			}
+		}
+		output = output + System.lineSeparator();
+		output = output + "DEFAULT-TYPE " + defaultType() + System.lineSeparator();
+		if(defaultType() == DefaultType.VALUE){
+			output = output + "DEFAULT-VALUE " + defaultValue + System.lineSeparator();
+		}
+		return output;
+	}
+
+
 
 }

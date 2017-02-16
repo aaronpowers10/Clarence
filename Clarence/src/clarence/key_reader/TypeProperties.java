@@ -23,15 +23,29 @@ public class TypeProperties {
 	private String name;
 	private String abbreviation;
 	private ArrayList<FieldProperties> fieldPropertiesList;
+	private int typeIndex;
 
-	public TypeProperties(CommandEntry commandEntry, KeywordTable keywordTable, int type, SymbolTable symbolTable,
-			CommandTable commandTable, DefaultTable defaultTable, ExpressionTable expressionTable) {
+	public TypeProperties(CommandEntry commandEntry, KeywordTable keywordTable, int typeIndex, SymbolTable symbolTable,
+			CommandTable commandTable, DefaultTable defaultTable, ExpressionTable expressionTable, int commandIndex) {
 		this.name = commandEntry.name();
 		this.abbreviation = commandEntry.abbreviation();
+		this.typeIndex = typeIndex;
+		int typeKeyIndex = typeIndex-1;
+		int typeOffset = 0;
+		if(commandEntry.uniqueKeys()){
+			typeOffset = (typeIndex-1)*commandEntry.numKeys();
+		} else {
+			//typeKeyIndex = 0;
+		}
+		FieldValuePropertiesFactory valueFactory = new FieldValuePropertiesFactory(symbolTable,commandTable,defaultTable,expressionTable,commandIndex,typeKeyIndex);
 		fieldPropertiesList = new ArrayList<FieldProperties>();
-		FieldPropertiesFactory factory = new FieldPropertiesFactory(symbolTable, commandTable);
 		for (int i = 0; i < commandEntry.numKeys(); i++) {
-			fieldPropertiesList.add(factory.create(keywordTable.get(commandEntry.startKeys() + i)));
+			
+			KeywordEntry keywordEntry = keywordTable.get(commandEntry.startKeys() + i + typeOffset);
+			System.out.println(keywordEntry.name());
+			String fieldName = keywordEntry.name();
+			String fieldAbbreviation = keywordEntry.abbreviation();	
+			fieldPropertiesList.add(new FieldProperties(fieldName,fieldAbbreviation,valueFactory.create(keywordEntry)));
 		}
 	}
 
@@ -49,6 +63,37 @@ public class TypeProperties {
 
 	public void addFieldProperties(FieldProperties fieldProperties) {
 		fieldPropertiesList.add(fieldProperties);
+	}
+	
+	public FieldProperties get(int index){
+		return fieldPropertiesList.get(index);
+	}
+	
+	public FieldProperties getFieldProperties(String name){
+		for(int i=0;i<fieldPropertiesList.size();i++){
+			if(fieldPropertiesList.get(i).name().equals(name)){
+				return fieldPropertiesList.get(i);
+			}
+		}
+		return null;
+	}
+	
+	public String write(){
+		String output = "";
+		output = output + "COMMAND-DEFINITION " + name + System.lineSeparator();
+		output = output + "ABBREVIATION " + abbreviation + System.lineSeparator();
+		try{
+			CodewordFieldProperties type = (CodewordFieldProperties)getFieldProperties("TYPE").valueProperties();
+			output = output + "TYPE " + type.allowedValue(typeIndex) + System.lineSeparator();
+		} catch (NullPointerException e){
+			
+		}
+		output = output + "NUMBER-OF-KEYWORDS " + numFields() + System.lineSeparator();
+		output = output + System.lineSeparator();
+		for(int i=0;i<numFields();i++){
+			output = output + fieldPropertiesList.get(i).write();
+		}
+		return output;
 	}
 
 }

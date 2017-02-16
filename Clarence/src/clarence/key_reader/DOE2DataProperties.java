@@ -23,15 +23,37 @@ public class DOE2DataProperties {
 
 	private ArrayList<TypeProperties> typePropertiesList;
 
-	public DOE2DataProperties(SymbolTable symbolTable, KeywordTable keywordTable, CommandTable commandTable, DefaultTable defaultTable, ExpressionTable expressionTable) {
+	public DOE2DataProperties(SymbolTable symbolTable, KeywordTable keywordTable, CommandTable commandTable,
+			DefaultTable defaultTable, ExpressionTable expressionTable) {
 		typePropertiesList = new ArrayList<TypeProperties>();
 		for (int commandIndex = 0; commandIndex < commandTable.size(); commandIndex++) {
-			for (int typeIndex = 0; typeIndex < commandTable.get(commandIndex).numTypes(); typeIndex++) {
-				TypeProperties typeProperties = new TypeProperties(commandTable.get(commandIndex), keywordTable, typeIndex, symbolTable,
-						commandTable,defaultTable,expressionTable);
+			for (int typeIndex = 1; typeIndex < commandTable.get(commandIndex).numTypes() + 1; typeIndex++) {
+				TypeProperties typeProperties = new TypeProperties(commandTable.get(commandIndex), keywordTable,
+						typeIndex, symbolTable, commandTable, defaultTable, expressionTable,commandIndex);
 				typePropertiesList.add(typeProperties);
 			}
 		}
+	}
+	
+	public int size(){
+		return typePropertiesList.size();
+	}
+	
+	public TypeProperties get(int index){
+		return typePropertiesList.get(index);
+	}
+	
+	public TypeProperties getTypeProperties(String name){
+		for(int i=0;i<typePropertiesList.size();i++){
+			if(typePropertiesList.get(i).name().equals(name)){
+				return typePropertiesList.get(i);
+			}
+		}
+		return null;
+	}
+	
+	public FieldProperties getFieldProperties(String type, String field){
+		return getTypeProperties(type).getFieldProperties(field);
 	}
 
 }

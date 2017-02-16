@@ -19,16 +19,38 @@ package clarence.key_reader;
 
 import java.util.ArrayList;
 
-public class ListFieldProperties implements FieldValueProperties {
+public class ListFieldProperties extends FieldValueProperties {
 	
 	private ArrayList<FieldValueProperties> elements;
 	
-	public ListFieldProperties(){
+	public ListFieldProperties(int defaultType, int defaultValue,
+			ExpressionTable expressionTable){
+		super(defaultType,defaultValue,expressionTable);
 		elements = new ArrayList<FieldValueProperties>();
 	}
 	
 	public void add(FieldValueProperties element){
 		elements.add(element);
+	}
+	
+	@Override
+	public String fieldType() {
+		return "LIST";
+	}
+	
+	public int maxSize(){
+		return elements.size();
+	}
+
+	@Override
+	public String write() {
+		String output = "";
+		output = output + "ELEMENT-TYPE " + elements.get(0).fieldType() + System.lineSeparator();
+		for(int i=0;i<maxSize();i++){
+			output = output + "ELEMENT " + (i+1) + System.lineSeparator();
+			output = output + elements.get(i).write();
+		}
+		return output;
 	}
 
 }

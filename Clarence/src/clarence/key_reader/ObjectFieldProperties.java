@@ -17,16 +17,45 @@
  */
 package clarence.key_reader;
 
-public class ObjectFieldProperties implements FieldValueProperties{
+import java.util.ArrayList;
+
+public class ObjectFieldProperties extends FieldValueProperties{
 	
 	private CommandEntry commandEntry;
+	private ArrayList<String> allowedTypes;
 	
-	public ObjectFieldProperties(CommandEntry commandEntry){
+	public ObjectFieldProperties(CommandEntry commandEntry, ArrayList<String> allowedTypes,int defaultType, int defaultValue,
+			ExpressionTable expressionTable){
+		super(defaultType,defaultValue,expressionTable);
 		this.commandEntry = commandEntry;
+		this.allowedTypes = allowedTypes;
 	}
 	
 	public String type(){
 		return commandEntry.name();
+	}
+
+	@Override
+	public String fieldType() {
+		return "OBJECT";
+	}
+
+	@Override
+	public String write() {
+		String output = "";
+		output = output + "ALLOWED-COMMAND " + commandEntry.name() + System.lineSeparator();
+		if(allowedTypes.size()>0){
+			output = output + "ALLOWED-TYPES ";
+			for(int i=0;i<allowedTypes.size();i++){
+				output = output + allowedTypes.get(i);
+				if(i < allowedTypes.size() - 1){
+					output = output + ",";
+				}
+			}
+			output = output + System.lineSeparator();
+		}
+		output = output + "DEFAULT-TYPE " + defaultType() + System.lineSeparator();
+		return output;
 	}
 
 }

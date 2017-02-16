@@ -32,6 +32,7 @@ public class KeywordEntry {
 	private int max;
 	private int valPos;
 	private int def;
+	private int typeCode;
 	
 	public KeywordEntry(ByteBuffer buffer){
 		read(buffer);
@@ -51,8 +52,8 @@ public class KeywordEntry {
 		}
 		
 		try {
-			name = new String(nameBuffer.array(), "ASCII");
-			abbreviation = new String(abbreviationBuffer.array(), "ASCII");
+			name = new String(nameBuffer.array(), "ASCII").trim();
+			abbreviation = new String(abbreviationBuffer.array(), "ASCII").trim();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -65,7 +66,8 @@ public class KeywordEntry {
 		valPos = buffer.getInt();
 		def = buffer.getInt();		
 		buffer.getInt();
-		buffer.getInt();
+		typeCode = buffer.getInt();
+		//System.out.println(typeCode);
 		buffer.getInt();
 	}
 	
@@ -103,5 +105,9 @@ public class KeywordEntry {
 	
 	public int def(){
 		return def;
+	}
+	
+	public int typeCode(){
+		return typeCode;
 	}
 }

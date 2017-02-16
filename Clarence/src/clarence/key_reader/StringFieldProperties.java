@@ -17,7 +17,23 @@
  */
 package clarence.key_reader;
 
-public class StringFieldProperties implements FieldValueProperties {
+public class StringFieldProperties extends FieldValueProperties {
 	
+	public StringFieldProperties(int defaultType, int defaultValue,
+			ExpressionTable expressionTable){
+		super(defaultType,defaultValue,expressionTable);
+	}
+	
+	@Override
+	public String fieldType() {
+		return "STRING";
+	}
+
+	@Override
+	public String write() {
+		String output = "";
+		output = output + "DEFAULT-TYPE " + defaultType() + System.lineSeparator();
+		return output;
+	}
 
 }

@@ -28,7 +28,7 @@ public class ClarenceTestDriver {
 
 	public static void main(String[] args) throws IOException {
 		DOE2DataProperties dataProperties = KeyReader.read("C:\\doe22\\EXE48r\\BDLKEY.BIN");
-
+		
 		try {
 			FileWriter output = new FileWriter(new File("BDLKEY.TXT"));
 			for (int i = 0; i < dataProperties.size(); i++) {

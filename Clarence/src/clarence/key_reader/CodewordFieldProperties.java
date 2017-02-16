@@ -22,14 +22,12 @@ import java.util.ArrayList;
 public class CodewordFieldProperties extends FieldValueProperties {
 	
 	private ArrayList<SymbolEntry> allowedValues;
-	private String defaultValue;
+	private DOE2Tables doe2Tables;
 	
-	public CodewordFieldProperties(ArrayList<SymbolEntry> allowedValues){
+	public CodewordFieldProperties(ArrayList<SymbolEntry> allowedValues, DOE2Tables doe2Tables){
 		super();
 		this.allowedValues = allowedValues;
-		if(defaultType() == DefaultType.VALUE){
-			//defaultValue = symbolTable.get(defaultValueInteger()).symbol();
-		}
+		this.doe2Tables = doe2Tables;
 	}
 	
 	public int numAllowedValues(){
@@ -49,6 +47,14 @@ public class CodewordFieldProperties extends FieldValueProperties {
 	public String fieldType() {
 		return "CODEWORD";
 	}
+	
+	public String defaultValue(){
+		if(defaultType() == DefaultType.VALUE){
+			return doe2Tables.symbolEntry(defaultValueInteger()).symbol();
+		} else {
+			return "";
+		}
+	}
 
 	@Override
 	public String write() {
@@ -64,7 +70,7 @@ public class CodewordFieldProperties extends FieldValueProperties {
 		output = output + System.lineSeparator();
 		output = output + "DEFAULT-TYPE " + defaultType() + System.lineSeparator();
 		if(defaultType() == DefaultType.VALUE){
-			output = output + "DEFAULT-VALUE " + defaultValue + System.lineSeparator();
+			output = output + "DEFAULT-VALUE " + defaultValue() + System.lineSeparator();
 		} else if (defaultType() == DefaultType.EXPRESSION) {
 			output = output + "{" + defaultExpression() + "}" + System.lineSeparator();
 		}

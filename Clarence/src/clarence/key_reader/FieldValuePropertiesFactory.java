@@ -99,7 +99,7 @@ public class FieldValuePropertiesFactory {
 	private FieldValueProperties createCodewordFieldProperties(KeywordEntry keywordEntry) {
 		int codewordType = keywordEntry.min();
 		ArrayList<SymbolEntry> allowedValues = doe2Tables.getSymbolListOfType(codewordType);
-		return new CodewordFieldProperties(allowedValues);
+		return new CodewordFieldProperties(allowedValues,doe2Tables);
 	}
 
 	private FieldValueProperties createObjectFieldProperties(KeywordEntry keywordEntry) {

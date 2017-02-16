@@ -51,7 +51,6 @@ public class DefaultTable {
 	}
 	
 	public TypeDefaultEntry get(String commandName, int type){
-		System.out.println("GETTING DEFAULT ENTRY FOR " + commandName + " TYPE " + type);
 		return get(commandName).defaultEntry(type);
 	}
 

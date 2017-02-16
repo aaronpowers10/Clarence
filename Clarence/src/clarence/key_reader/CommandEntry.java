@@ -114,10 +114,6 @@ public class CommandEntry {
 		} else {
 			hasDefaults = false;
 		}
-		if (name.equals("DESIGN-DAY")) {
-			System.out.println(previousEntry.numKeys());
-			System.out.println("DESIGN-DAY " + hasDefaults);
-		}
 	}
 
 	public String name() {

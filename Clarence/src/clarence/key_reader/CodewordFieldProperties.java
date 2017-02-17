@@ -19,7 +19,7 @@ package clarence.key_reader;
 
 import java.util.ArrayList;
 
-public class CodewordFieldProperties extends FieldValueProperties {
+public class CodewordFieldProperties extends KeywordValueProperties {
 	
 	private ArrayList<SymbolEntry> allowedValues;
 	private DOE2Tables doe2Tables;

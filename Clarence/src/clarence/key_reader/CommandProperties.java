@@ -19,14 +19,14 @@ package clarence.key_reader;
 
 import java.util.ArrayList;
 
-public class TypeProperties {
+public class CommandProperties {
 	private String name;
 	private String abbreviation;
-	private ArrayList<FieldProperties> fieldPropertiesList;
+	private ArrayList<KeywordProperties> keywordPropertiesList;
 	private int typeIndex;
 	private String parent;
 
-	public TypeProperties(int commandIndex, int typeIndex, DOE2Tables doe2Tables) {
+	public CommandProperties(int commandIndex, int typeIndex, DOE2Tables doe2Tables) {
 		CommandEntry commandEntry = doe2Tables.commandEntry(commandIndex);
 		this.name = commandEntry.name();
 		this.abbreviation = commandEntry.abbreviation();
@@ -40,13 +40,13 @@ public class TypeProperties {
 		if(commandEntry.uniqueKeys()){
 			typeOffset = (typeIndex-1)*commandEntry.numKeys();
 		} 
-		FieldValuePropertiesFactory valueFactory = new FieldValuePropertiesFactory(commandEntry,typeIndex-1,doe2Tables);
-		fieldPropertiesList = new ArrayList<FieldProperties>();
+		KeywordValuePropertiesFactory valueFactory = new KeywordValuePropertiesFactory(commandEntry,typeIndex-1,doe2Tables);
+		keywordPropertiesList = new ArrayList<KeywordProperties>();
 		for (int i = 0; i < commandEntry.numKeys(); i++) {
 			KeywordEntry keywordEntry = doe2Tables.keywordEntry(commandEntry.startKeys() + i + typeOffset);
 			String fieldName = keywordEntry.name();
 			String fieldAbbreviation = keywordEntry.abbreviation();	
-			fieldPropertiesList.add(new FieldProperties(fieldName,fieldAbbreviation,valueFactory.create(keywordEntry)));
+			keywordPropertiesList.add(new KeywordProperties(fieldName,fieldAbbreviation,valueFactory.create(keywordEntry)));
 		}
 	}
 
@@ -58,26 +58,26 @@ public class TypeProperties {
 		return abbreviation;
 	}
 
-	public int numFields() {
-		return fieldPropertiesList.size();
+	public int numKeywords() {
+		return keywordPropertiesList.size();
 	}
 	
 	public String parent(){
 		return parent;
 	}
 
-	public void addFieldProperties(FieldProperties fieldProperties) {
-		fieldPropertiesList.add(fieldProperties);
+	public void addKeywordProperties(KeywordProperties keywordProperties) {
+		keywordPropertiesList.add(keywordProperties);
 	}
 	
-	public FieldProperties get(int index){
-		return fieldPropertiesList.get(index);
+	public KeywordProperties get(int index){
+		return keywordPropertiesList.get(index);
 	}
 	
-	public FieldProperties getFieldProperties(String name){
-		for(int i=0;i<fieldPropertiesList.size();i++){
-			if(fieldPropertiesList.get(i).name().equals(name)){
-				return fieldPropertiesList.get(i);
+	public KeywordProperties getKeywordProperties(String name){
+		for(int i=0;i<keywordPropertiesList.size();i++){
+			if(keywordPropertiesList.get(i).name().equals(name)){
+				return keywordPropertiesList.get(i);
 			}
 		}
 		return null;
@@ -88,18 +88,18 @@ public class TypeProperties {
 		output = output + "COMMAND-DEFINITION " + name + System.lineSeparator();
 		output = output + "ABBREVIATION " + abbreviation + System.lineSeparator();
 		try{
-			CodewordFieldProperties type = (CodewordFieldProperties)getFieldProperties("TYPE").valueProperties();
+			CodewordFieldProperties type = (CodewordFieldProperties)getKeywordProperties("TYPE").valueProperties();
 			output = output + "TYPE " + type.allowedValue(typeIndex) + System.lineSeparator();
 		} catch (NullPointerException e){
 			
 		}
-		output = output + "NUMBER-OF-KEYWORDS " + numFields() + System.lineSeparator();
+		output = output + "NUMBER-OF-KEYWORDS " + numKeywords() + System.lineSeparator();
 		if(!parent.equals("NONE")){
 			output = output + "PARENT " + parent + System.lineSeparator();
 		}
 		output = output + System.lineSeparator();
-		for(int i=0;i<numFields();i++){
-			output = output + fieldPropertiesList.get(i).write();
+		for(int i=0;i<numKeywords();i++){
+			output = output + keywordPropertiesList.get(i).write();
 		}
 		return output;
 	}

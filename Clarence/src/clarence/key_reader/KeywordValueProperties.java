@@ -17,13 +17,13 @@
  */
 package clarence.key_reader;
 
-public abstract class FieldValueProperties {
+public abstract class KeywordValueProperties {
 
 	private DefaultType defaultType;
 	private int defaultValueInteger;
 	private String defaultExpression;
 
-	public FieldValueProperties() {
+	public KeywordValueProperties() {
 		defaultType = DefaultType.NO_DEFAULT;
 	}
 

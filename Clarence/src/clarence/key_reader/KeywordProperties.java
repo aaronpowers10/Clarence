@@ -17,13 +17,13 @@
  */
 package clarence.key_reader;
 
-public class FieldProperties {
+public class KeywordProperties {
 	
 	private String name;
 	private String abbreviation;
-	private FieldValueProperties valueProperties;
+	private KeywordValueProperties valueProperties;
 	
-	public FieldProperties(String name, String abbreviation,FieldValueProperties valueProperties){
+	public KeywordProperties(String name, String abbreviation,KeywordValueProperties valueProperties){
 		this.name = name;
 		this.abbreviation = abbreviation;
 		this.valueProperties = valueProperties;
@@ -37,7 +37,7 @@ public class FieldProperties {
 		return abbreviation;
 	}
 	
-	public FieldValueProperties valueProperties(){
+	public KeywordValueProperties valueProperties(){
 		return valueProperties;
 	}
 	

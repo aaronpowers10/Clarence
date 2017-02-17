@@ -17,6 +17,6 @@
  */
 package clarence.key_reader;
 
-public interface FieldDefault {
+public interface KeywordDefault {
 
 }

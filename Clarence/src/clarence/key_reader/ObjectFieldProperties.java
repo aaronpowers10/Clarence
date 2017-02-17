@@ -19,7 +19,7 @@ package clarence.key_reader;
 
 import java.util.ArrayList;
 
-public class ObjectFieldProperties extends FieldValueProperties{
+public class ObjectFieldProperties extends KeywordValueProperties{
 	
 	private CommandEntry commandEntry;
 	private ArrayList<String> allowedTypes;

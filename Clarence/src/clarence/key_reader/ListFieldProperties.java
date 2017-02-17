@@ -19,16 +19,16 @@ package clarence.key_reader;
 
 import java.util.ArrayList;
 
-public class ListFieldProperties extends FieldValueProperties {
+public class ListFieldProperties extends KeywordValueProperties {
 	
-	private ArrayList<FieldValueProperties> elements;
+	private ArrayList<KeywordValueProperties> elements;
 	
 	public ListFieldProperties(){
 		super();
-		elements = new ArrayList<FieldValueProperties>();
+		elements = new ArrayList<KeywordValueProperties>();
 	}
 	
-	public void add(FieldValueProperties element){
+	public void add(KeywordValueProperties element){
 		elements.add(element);
 	}
 	

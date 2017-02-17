@@ -19,24 +19,24 @@ package clarence.key_reader;
 
 import java.util.ArrayList;
 
-public class FieldValuePropertiesFactory {
+public class KeywordValuePropertiesFactory {
 
 	private DOE2Tables doe2Tables;
 	private CommandEntry commandEntry;
 	private int typeIndex;
 
-	public FieldValuePropertiesFactory(CommandEntry commandEntry, int typeIndex,DOE2Tables doe2Tables) {
+	public KeywordValuePropertiesFactory(CommandEntry commandEntry, int typeIndex,DOE2Tables doe2Tables) {
 		this.doe2Tables = doe2Tables;
 		this.commandEntry = commandEntry;
 		this.typeIndex = typeIndex;
 	}
 
-	public FieldValueProperties create(KeywordEntry keywordEntry) {
+	public KeywordValueProperties create(KeywordEntry keywordEntry) {
 
 		if (keywordEntry.length() > 1) {
 			ListFieldProperties valueProperties = new ListFieldProperties();
 			for (int i = 0; i < keywordEntry.length(); i++) {
-				FieldValueProperties element = createElement(keywordEntry);
+				KeywordValueProperties element = createElement(keywordEntry);
 				if(commandEntry.hasDefaults()){
 					int defaultType = doe2Tables.defaultEntry(commandEntry.name(),typeIndex).type(keywordEntry.valPos() + i - 1);
 					int defaultValue = doe2Tables.defaultEntry(commandEntry.name(),typeIndex).value(keywordEntry.valPos() + i - 1);
@@ -47,7 +47,7 @@ public class FieldValuePropertiesFactory {
 			}
 			return valueProperties;
 		} else {
-			FieldValueProperties valueProperties = createElement(keywordEntry);
+			KeywordValueProperties valueProperties = createElement(keywordEntry);
 			if(commandEntry.hasDefaults()){
 				int defaultType = doe2Tables.defaultEntry(commandEntry.name(),typeIndex).type(keywordEntry.valPos() - 1);
 				int defaultValue = doe2Tables.defaultEntry(commandEntry.name(),typeIndex).value(keywordEntry.valPos() - 1);
@@ -58,11 +58,10 @@ public class FieldValuePropertiesFactory {
 	}
 	
 
-	private FieldValueProperties createElement(KeywordEntry keywordEntry) {
+	private KeywordValueProperties createElement(KeywordEntry keywordEntry) {
 		if (keywordEntry.type() == 1) {
 			return createRealFieldProperties(keywordEntry);
 		} else if (keywordEntry.type() == 2) {
-			//return createCodewordFieldProperties(keywordEntry);
 			return createObjectFieldProperties(keywordEntry);
 		} else if (keywordEntry.type() == 3) {
 			return createObjectFieldProperties(keywordEntry);
@@ -85,25 +84,25 @@ public class FieldValuePropertiesFactory {
 		return null;
 	}
 
-	private FieldValueProperties createIntegerFieldProperties(KeywordEntry keywordEntry) {
+	private KeywordValueProperties createIntegerFieldProperties(KeywordEntry keywordEntry) {
 		float min = IntToFloat.convert(keywordEntry.min());
 		float max = IntToFloat.convert(keywordEntry.max());
 		return new IntegerFieldProperties(min, max);
 	}
 
-	private FieldValueProperties createRealFieldProperties(KeywordEntry keywordEntry) {
+	private KeywordValueProperties createRealFieldProperties(KeywordEntry keywordEntry) {
 		float min = IntToFloat.convert(keywordEntry.min());
 		float max = IntToFloat.convert(keywordEntry.max());
 		return new RealFieldProperties(min, max);
 	}
 
-	private FieldValueProperties createCodewordFieldProperties(KeywordEntry keywordEntry) {
+	private KeywordValueProperties createCodewordFieldProperties(KeywordEntry keywordEntry) {
 		int codewordType = keywordEntry.min();
 		ArrayList<SymbolEntry> allowedValues = doe2Tables.getSymbolListOfType(codewordType);
 		return new CodewordFieldProperties(allowedValues,doe2Tables);
 	}
 
-	private FieldValueProperties createObjectFieldProperties(KeywordEntry keywordEntry) {
+	private KeywordValueProperties createObjectFieldProperties(KeywordEntry keywordEntry) {
 		int objectType = keywordEntry.min();
 		CommandEntry commandEntry = doe2Tables.getCommandOfType(objectType);
 		if (commandEntry == null) {
@@ -126,7 +125,7 @@ public class FieldValuePropertiesFactory {
 		return new ObjectFieldProperties(commandEntry, allowedTypes);
 	}
 	
-	private FieldValueProperties createStringFieldProperties(KeywordEntry keywordEntry) {
+	private KeywordValueProperties createStringFieldProperties(KeywordEntry keywordEntry) {
 		return new StringFieldProperties();
 	}
 

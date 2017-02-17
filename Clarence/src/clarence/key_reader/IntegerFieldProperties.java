@@ -17,7 +17,7 @@
  */
 package clarence.key_reader;
 
-public class IntegerFieldProperties extends FieldValueProperties {
+public class IntegerFieldProperties extends KeywordValueProperties {
 	
 	private float min;
 	private float max;

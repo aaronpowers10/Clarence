@@ -17,7 +17,7 @@
  */
 package clarence.key_reader;
 
-public class StringFieldProperties extends FieldValueProperties {
+public class StringFieldProperties extends KeywordValueProperties {
 	
 	public StringFieldProperties(){
 		super();

@@ -21,37 +21,37 @@ import java.util.ArrayList;
 
 public class DOE2DataProperties {
 
-	private ArrayList<CommandProperties> typePropertiesList;
+	private ArrayList<CommandProperties> commandPropertiesList;
 
 	public DOE2DataProperties(DOE2Tables doe2Tables) {
-		typePropertiesList = new ArrayList<CommandProperties>();
+		commandPropertiesList = new ArrayList<CommandProperties>();
 		for (int commandIndex = 0; commandIndex < doe2Tables.numCommands(); commandIndex++) {
 			for (int typeIndex = 1; typeIndex < doe2Tables.commandEntry(commandIndex).numTypes() + 1; typeIndex++) {
 				CommandProperties typeProperties = new CommandProperties(commandIndex,typeIndex,doe2Tables);
-				typePropertiesList.add(typeProperties);
+				commandPropertiesList.add(typeProperties);
 			}
 		}
 	}
 	
 	public int size(){
-		return typePropertiesList.size();
+		return commandPropertiesList.size();
 	}
 	
 	public CommandProperties get(int index){
-		return typePropertiesList.get(index);
+		return commandPropertiesList.get(index);
 	}
 	
-	public CommandProperties getTypeProperties(String name){
-		for(int i=0;i<typePropertiesList.size();i++){
-			if(typePropertiesList.get(i).name().equals(name)){
-				return typePropertiesList.get(i);
+	public CommandProperties getCommandProperties(String name){
+		for(int i=0;i<commandPropertiesList.size();i++){
+			if(commandPropertiesList.get(i).name().equals(name)){
+				return commandPropertiesList.get(i);
 			}
 		}
 		return null;
 	}
 	
-	public KeywordProperties getFieldProperties(String type, String field){
-		return getTypeProperties(type).getKeywordProperties(field);
+	public KeywordProperties getKeywordProperties(String command, String keyword){
+		return getCommandProperties(command).getKeywordProperties(keyword);
 	}
 
 }

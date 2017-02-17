@@ -59,8 +59,8 @@ public class CodewordFieldProperties extends FieldValueProperties {
 	@Override
 	public String write() {
 		String output = "";
-		output = output + "NUMBER-OF-ALLOWED-VALUES " + numAllowedValues() + System.lineSeparator();
-		output = output + "ALLOWED-VALUES ";
+		output = output + "NUMBER-OF-CHOICES " + numAllowedValues() + System.lineSeparator();
+		output = output + "CHOICES ";
 		for(int i=0;i<allowedValues.size();i++){
 			output = output + allowedValues.get(i).symbol();
 			if(i<allowedValues.size()-1){
@@ -72,7 +72,7 @@ public class CodewordFieldProperties extends FieldValueProperties {
 		if(defaultType() == DefaultType.VALUE){
 			output = output + "DEFAULT-VALUE " + defaultValue() + System.lineSeparator();
 		} else if (defaultType() == DefaultType.EXPRESSION) {
-			output = output + "{" + defaultExpression() + "}" + System.lineSeparator();
+			output = output + "EXPRESSION {" + defaultExpression() + "}" + System.lineSeparator();
 		}
 		return output;
 	}

@@ -60,5 +60,14 @@ public class CommandTable {
 		}
 		return null;
 	}
+	
+	public CommandEntry getParent(int parentIndex){
+		for(int i=0;i<commands.size();i++){
+			if(commands.get(i).childClass() == parentIndex){
+				return commands.get(i);
+			}
+		}
+		return null;
+	}
 
 }

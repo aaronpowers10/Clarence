@@ -24,12 +24,18 @@ public class TypeProperties {
 	private String abbreviation;
 	private ArrayList<FieldProperties> fieldPropertiesList;
 	private int typeIndex;
+	private String parent;
 
 	public TypeProperties(int commandIndex, int typeIndex, DOE2Tables doe2Tables) {
 		CommandEntry commandEntry = doe2Tables.commandEntry(commandIndex);
 		this.name = commandEntry.name();
 		this.abbreviation = commandEntry.abbreviation();
 		this.typeIndex = typeIndex;
+		if(commandEntry.parentClass() == 0 || commandEntry.level() == 0){
+			parent = "NONE";
+		} else {
+			parent = doe2Tables.getCommandParent(commandEntry.parentClass()).name();
+		}
 		int typeOffset = 0;
 		if(commandEntry.uniqueKeys()){
 			typeOffset = (typeIndex-1)*commandEntry.numKeys();
@@ -54,6 +60,10 @@ public class TypeProperties {
 
 	public int numFields() {
 		return fieldPropertiesList.size();
+	}
+	
+	public String parent(){
+		return parent;
 	}
 
 	public void addFieldProperties(FieldProperties fieldProperties) {
@@ -84,6 +94,9 @@ public class TypeProperties {
 			
 		}
 		output = output + "NUMBER-OF-KEYWORDS " + numFields() + System.lineSeparator();
+		if(!parent.equals("NONE")){
+			output = output + "PARENT " + parent + System.lineSeparator();
+		}
 		output = output + System.lineSeparator();
 		for(int i=0;i<numFields();i++){
 			output = output + fieldPropertiesList.get(i).write();

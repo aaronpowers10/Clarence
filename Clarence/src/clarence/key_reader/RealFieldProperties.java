@@ -54,7 +54,7 @@ public class RealFieldProperties extends FieldValueProperties {
 		if (defaultType() == DefaultType.VALUE) {
 			output = output + "DEFAULT-VALUE " + defaultValue() + System.lineSeparator();
 		} else if (defaultType() == DefaultType.EXPRESSION) {
-			output = output + "{" + defaultExpression() + "}" + System.lineSeparator();
+			output = output + "EXPRESSION {" + defaultExpression() + "}" + System.lineSeparator();
 		}
 		return output;
 	}

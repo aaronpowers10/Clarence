@@ -48,13 +48,13 @@ public class IntegerFieldProperties extends FieldValueProperties {
 	@Override
 	public String write() {
 		String output = "";
-		output = output + "MIN " + min + System.lineSeparator();
-		output = output + "MAX " + max + System.lineSeparator();
+		output = output + "MIN " + min() + System.lineSeparator();
+		output = output + "MAX " + max() + System.lineSeparator();
 		output = output + "DEFAULT-TYPE " + defaultType() + System.lineSeparator();
 		if (defaultType() == DefaultType.VALUE) {
 			output = output + "DEFAULT-VALUE " + defaultValue() + System.lineSeparator();
 		} else if(defaultType() == DefaultType.EXPRESSION) {
-			output = output + "{" + defaultExpression() + "}" + System.lineSeparator();
+			output = output + "EXPRESSION {" + defaultExpression() + "}" + System.lineSeparator();
 		}
 		return output;
 	}

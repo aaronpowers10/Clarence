@@ -62,7 +62,8 @@ public class FieldValuePropertiesFactory {
 		if (keywordEntry.type() == 1) {
 			return createRealFieldProperties(keywordEntry);
 		} else if (keywordEntry.type() == 2) {
-			return createCodewordFieldProperties(keywordEntry);
+			//return createCodewordFieldProperties(keywordEntry);
+			return createObjectFieldProperties(keywordEntry);
 		} else if (keywordEntry.type() == 3) {
 			return createObjectFieldProperties(keywordEntry);
 		} else if (keywordEntry.type() == 4) {

@@ -54,6 +54,9 @@ public class ObjectFieldProperties extends FieldValueProperties{
 			output = output + System.lineSeparator();
 		}
 		output = output + "DEFAULT-TYPE " + defaultType() + System.lineSeparator();
+		if (defaultType() == DefaultType.EXPRESSION) {
+			output = output + "EXPRESSION {" + defaultExpression() + "}" + System.lineSeparator();
+		}
 		return output;
 	}
 

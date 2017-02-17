@@ -82,6 +82,10 @@ public class DOE2Tables {
 		return commandTable.getOfType(type);
 	}
 	
+	public CommandEntry getCommandParent(int parentIndex){
+		return commandTable.getParent(parentIndex);
+	}
+	
 	public KeywordEntry keywordEntry(int index){
 		return keywordTable.get(index);
 	}

@@ -81,6 +81,9 @@ public class BinaryString {
 		System.out.println(binaryString.toDecimal());
 		BinaryString binaryString2 = new BinaryString(493879296,32).substring(20, 32);
 		System.out.println(binaryString2.toDecimal());
+		
+		BinaryString binaryString3 = new BinaryString(1684234849,32).substring(0, 8);
+		System.out.println(binaryString3.toDecimal());
 //		BinaryString binaryString = new BinaryString(514302436,32).substring(20, 32);
 //		System.out.println(binaryString.toDecimal());
 //		BinaryString binaryString = new BinaryString(514302436,32).substring(20, 32);

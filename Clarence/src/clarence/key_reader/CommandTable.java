@@ -31,8 +31,7 @@ public class CommandTable {
 
 	private void read(ByteBuffer buffer, int size, LengthData lengthData) {
 		CommandEntry lastCommandWithDefaults = null;
-		for (int i = 0; i < size; i++) {
-			
+		for (int i = 0; i < size; i++) {	
 			if(i==0){
 				commands.add(new CommandEntry(buffer,lengthData));
 			} else {
@@ -41,6 +40,12 @@ public class CommandTable {
 			if(commands.get(i).hasDefaults()){
 				lastCommandWithDefaults = commands.get(i);
 			}
+		}
+	}
+	
+	public void write(ByteBuffer buffer) {
+		for(int i=0;i<commands.size();i++) {
+			commands.get(i).write(buffer);
 		}
 	}
 
@@ -68,6 +73,46 @@ public class CommandTable {
 			}
 		}
 		return null;
+	}
+	
+	public int byteSize() {
+		int byteSize = 0;
+		for(CommandEntry command: commands) {
+			byteSize += command.byteSize();
+		}
+		return byteSize;
+	}
+	
+	public String summary() {
+		StringBuilder summary = new StringBuilder();
+		summary.append("COMMAND TABLE SUMMARY" + System.lineSeparator());
+		summary.append("NUMBER OF ENTRIES: " + size()  + System.lineSeparator());
+		summary.append("SIZE ON DISK: " + byteSize() + " BYTES"+ System.lineSeparator());
+		summary.append("COMMANDS:"+ System.lineSeparator());
+		for(int i=0;i<size();i++) {
+			summary.append((i+1) + ": " + commands.get(i).name() + System.lineSeparator());
+		}
+		return summary.toString();
+	}
+	
+	public int maxDef() {
+		int maxDef = 0;
+		for(CommandEntry command: commands) {
+			if(command.maxDef() >0 && command.typeSym() > 0) {
+				maxDef += command.maxDef();
+			}
+		}
+		return maxDef;
+	}
+	
+	public int indexOf(String name) {
+		for(int i=0;i<commands.size();i++) {
+			if(commands.get(i).name().toLowerCase().equals(name.toLowerCase())) {
+				return commands.get(i).typeSym();
+				
+			}
+		}
+		return -1;
 	}
 
 }

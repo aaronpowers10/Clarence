@@ -119,7 +119,7 @@ public class DOE2Tables {
 	}
 	
 	public ExpressionEntry expressionEntry(int index){
-		return expressionTable.get(index);
+		return expressionTable.getByPointer(index);
 	}
 	
 	public int units(){
@@ -158,9 +158,9 @@ public class DOE2Tables {
 		return lengthData.commandTableLength();
 	}
 	
-	public int keywordStart(){
-		return lengthData.keywordStart();
-	}
+//	public int keywordStart(){
+//		return lengthData.keywordStart();
+//	}
 	
 	public int defaultStart(){
 		return lengthData.defaultStart();

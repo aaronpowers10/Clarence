@@ -26,6 +26,15 @@ public class SymbolEntry {
 	private String symbol;
 	private int type;
 	private int value;
+	private int i1,i2,i3,i4,i5,i6;
+	
+	public SymbolEntry(String symbol, int type, int value) {
+		this.symbol = symbol;
+		this.type = type;
+		this.value = value;
+		i1 = -1;
+		i2 = -1;
+	}
 	
 	public SymbolEntry(ByteBuffer buffer){
 		read(buffer);
@@ -45,13 +54,29 @@ public class SymbolEntry {
 		}
 		
 		type = buffer.getInt();		
-		buffer.getInt();
-		buffer.getInt();
+		i1 = buffer.getInt();
+		i2 = buffer.getInt();
 		value = buffer.getInt();
-		buffer.getInt();
-		buffer.getInt();
-		buffer.getInt();
-		buffer.getInt();
+		i3 = buffer.getInt();
+		i4 = buffer.getInt();
+		i5 = buffer.getInt();
+		i6 = buffer.getInt();
+	}
+	
+	public void write(ByteBuffer buffer) {
+		buffer.put(BinaryTools.packString(symbol,32));
+		buffer.putInt(type);		
+		buffer.putInt(i1);
+		buffer.putInt(i2);
+		buffer.putInt(value);
+		buffer.putInt(i3);
+		buffer.putInt(i4);
+		buffer.putInt(i5);
+		buffer.putInt(i6);
+	}
+	
+	public int byteSize() {
+		return 32 + 8*4;
 	}
 	
 	public String symbol(){

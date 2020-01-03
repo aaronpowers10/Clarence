@@ -24,11 +24,15 @@ public class TypeDefaultEntry {
 
 	private ArrayList<Integer> type;
 	private ArrayList<Integer> value;
+	private ArrayList<Integer> i1,i2;
+	private int numVals;
 
-	public TypeDefaultEntry(ByteBuffer buffer, int numVals) {
-		
+	public TypeDefaultEntry(ByteBuffer buffer, int numVals) {	
 		type = new ArrayList<Integer>();
 		value = new ArrayList<Integer>();
+		i1 = new ArrayList<Integer>();
+		i2 = new ArrayList<Integer>();
+		this.numVals = numVals;
 
 		for (int i = 0; i < numVals; i++) {
 			type.add(buffer.getInt());
@@ -39,13 +43,35 @@ public class TypeDefaultEntry {
 		}
 
 		for (int i = 0; i < numVals; i++) {
-			buffer.getInt();
+			i1.add(buffer.getInt());
 		}
 
 		for (int i = 0; i < numVals; i++) {
-			buffer.getInt();
+			i2.add(buffer.getInt());
 		}
 
+	}
+	
+	public void write(ByteBuffer buffer) {
+		for (int i = 0; i < numVals; i++) {
+			buffer.putInt(type.get(i));
+		}
+
+		for (int i = 0; i < numVals; i++) {
+			buffer.putInt(value.get(i));
+		}
+
+		for (int i = 0; i < numVals; i++) {
+			buffer.putInt(type.get(i));
+		}
+
+		for (int i = 0; i < numVals; i++) {
+			buffer.putInt(value.get(i));
+		}
+	}
+	
+	public int byteSize() {
+		return numVals*4*4;
 	}
 
 	public int type(int index) {
@@ -54,6 +80,45 @@ public class TypeDefaultEntry {
 	
 	public int value(int index){
 		return value.get(index);
+	}
+	
+	public int i1(int index) {
+		return i1.get(index);
+	}
+	
+	public int i2(int index) {
+		return i2.get(index);
+	}
+	
+	public int size() {
+		return numVals;
+	}
+	
+	public void add(DefaultCreator creator) {
+		numVals++;
+		i1.add(0);
+		i2.add(0);
+		creator.addDefault(type,value);
+	}
+	
+	public void setType(int type, int index) {
+		this.type.set(index,type);
+	}
+	
+	public void setValue(double valD, int index) {
+		int valI = DoubleToInt.convert(valD);
+		value.set(index,valI);
+	}
+	
+	public void offsetExpressions(int offset) {
+		for(int i=0;i<numVals;i++) {
+			if(type.get(i) == 2) {
+				int val = value.get(i);
+				val += offset;
+				value.set(i,val);
+				
+			}
+		}
 	}
 
 }

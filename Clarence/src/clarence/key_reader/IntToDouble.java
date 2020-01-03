@@ -18,11 +18,13 @@
 package clarence.key_reader;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class IntToDouble {
 	
 	public static double convert(int integer){
 		ByteBuffer buffer = ByteBuffer.allocate(4);
+		
 		buffer.putInt(integer);
 		buffer.rewind();
 		return (double)buffer.getFloat();

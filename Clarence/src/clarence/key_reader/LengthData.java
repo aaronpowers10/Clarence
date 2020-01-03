@@ -52,6 +52,21 @@ public class LengthData {
 		totalSize = buffer.getInt();
 	}
 	
+	public void write(ByteBuffer buffer) {
+		buffer.putInt(units);
+		buffer.putInt(symbolTableLength);
+		buffer.putInt(maxSymbols);
+		buffer.putInt(keywordEnd);
+		buffer.putInt(keywordStart);
+		buffer.putInt(commandTableLength);
+		buffer.putInt(defaultStart);
+		buffer.putInt(defaultEnd);
+		buffer.putInt(expressionStart);
+		buffer.putInt(expressionEnd);
+		buffer.putInt(totalSize);
+		
+	}
+	
 	public int units(){
 		return units;
 	}
@@ -76,6 +91,10 @@ public class LengthData {
 		return expressionEnd - expressionStart + 1;
 	}
 	
+	public int defaultEnd() {
+		return defaultEnd;
+	}
+	
 	public int expressionStart(){
 		return expressionStart;
 	}
@@ -94,6 +113,77 @@ public class LengthData {
 	
 	public int defaultStart(){
 		return defaultStart;
+	}
+	
+	public void setSymbolTableLength(int length) {
+		this.symbolTableLength = length;
+	}
+	
+	public void setKeywordStart(int start) {
+		this.keywordStart = start;
+	}
+	
+	public void setKeywordEnd(int end) {
+		this.keywordEnd = end;
+	}
+	
+	public void setCommandTableLength(int length) {
+		this.commandTableLength = length;
+	}
+	
+	public void setDefaultStart(int start) {
+		this.defaultStart = start;
+	}
+	
+	public void setDefaultEnd(int end) {
+		this.defaultEnd = end;
+	}
+	
+	public void setExpressionStart(int start) {
+		this.expressionStart = start;
+	}
+	
+	public void setExpressionEnd(int end) {
+		this.expressionEnd = end;
+	}
+	
+	public void setTotalSize(int size) {
+		this.totalSize = size;
+	}
+	
+	public void setMaxSymbols(int maxSymbols) {
+		this.maxSymbols = maxSymbols;
+	}
+	
+	public String getInfo() {
+		String info = "LENGTH DATA:" + System.lineSeparator();
+		info = info + "UNITS: " + units + System.lineSeparator();
+		info = info + "SYMBOL TABLE LENGTH: " + symbolTableLength + System.lineSeparator();
+		info = info + "MAX SYMBOLS: " + maxSymbols + System.lineSeparator();
+		info = info + "KEYWORD START: " + keywordStart + System.lineSeparator();
+		info = info + "KEYWORD END: " + keywordEnd + System.lineSeparator();
+		info = info + "COMMAND TABLE LENGTH: " + commandTableLength + System.lineSeparator();
+		info = info + "DEFAULT START: " + defaultStart + System.lineSeparator();
+		info = info + "DEFAULT END: " + defaultEnd + System.lineSeparator();
+		info = info + "EXPRESSION START: " + expressionStart + System.lineSeparator();
+		info = info + "EXPRESSION END: " + expressionEnd + System.lineSeparator();
+		info = info + "TOTAL SIZE: " + totalSize + System.lineSeparator();
+		return info;
+	}
+	
+	public int update(SymbolTable symbolTable,KeywordTable keywordTable,CommandTable commandTable,DefaultTable defaultTable, ExpressionTable expressionTable) {
+		
+		int prevExprStart = expressionStart;
+		symbolTableLength = symbolTable.size();
+		keywordEnd = keywordStart + (keywordTable.size()-1);
+		defaultStart = 16*keywordEnd + 1;
+		commandTableLength = commandTable.size();
+		defaultEnd = defaultStart + (defaultTable.byteSize()-12)/4;
+		expressionStart = defaultEnd + 3 + commandTable.maxDef()*5;
+		expressionEnd = expressionStart + (expressionTable.byteSize()-16)/4;
+		totalSize = expressionEnd;
+		int offset = expressionStart - prevExprStart;
+		return offset;
 	}
 
 }

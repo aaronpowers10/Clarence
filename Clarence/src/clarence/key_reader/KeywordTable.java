@@ -34,6 +34,12 @@ public class KeywordTable {
 			keywords.add(new KeywordEntry(buffer));
 		}
 	}
+	
+	public void write(ByteBuffer buffer) {
+		for(int i=0;i<keywords.size();i++) {
+			keywords.get(i).write(buffer);
+		}
+	}
 
 	public int size() {
 		return keywords.size();
@@ -41,6 +47,30 @@ public class KeywordTable {
 	
 	public KeywordEntry get(int index){
 		return keywords.get(index);
+	}
+	
+	public int byteSize() {
+		int byteSize = 0;
+		for(KeywordEntry keyword: keywords) {
+			byteSize += keyword.byteSize();
+		}
+		return byteSize;
+	}
+	
+	public String summary() {
+		StringBuilder summary = new StringBuilder();
+		summary.append("KEYWORD TABLE SUMMARY"+ System.lineSeparator());
+		summary.append("NUMBER OF ENTRIES: " + size()+ System.lineSeparator());
+		summary.append("SIZE ON DISK: " + byteSize() + " BYTES" + System.lineSeparator());
+		summary.append("KEYWORDS: "+ System.lineSeparator());
+		for(int i=0;i<size();i++) {
+			summary.append((i+1) + ": " + keywords.get(i).name() + System.lineSeparator());
+		}
+		return summary.toString();
+	}
+	
+	public void add(KeywordEntry keyword, int index) {
+		keywords.add(index, keyword);
 	}
 
 }

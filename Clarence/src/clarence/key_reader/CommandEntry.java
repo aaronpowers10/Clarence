@@ -20,6 +20,7 @@ package clarence.key_reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 
 public class CommandEntry {
 
@@ -38,6 +39,7 @@ public class CommandEntry {
 	private int parentClass;
 	private int defaultLength;
 	private int numTypes;
+	private int numDef, nSave, simLen, pos, currPrnt;
 	private LengthData lengthData;
 	private boolean hasDefaults;
 
@@ -73,38 +75,81 @@ public class CommandEntry {
 			e.printStackTrace();
 		}
 
-		iop = buffer.getInt();
-		level = buffer.getInt();
-		startKeys = buffer.getInt();
-		numKeys = buffer.getInt();
-		typeSym = buffer.getInt();
-		maxDef = buffer.getInt();
-		buffer.getInt();
-		referenceTableStart = buffer.getInt();
-		defaultTableStart = buffer.getInt();
-		valueLength = buffer.getInt();
-		buffer.getInt();
-		buffer.getInt();
-		childClass = buffer.getInt();
-		parentClass = buffer.getInt();
-		buffer.getInt();
-		buffer.getInt();
-		defaultLength = buffer.getInt();
-		numTypes = buffer.getInt();
+		iop = buffer.getInt();//7
+		level = buffer.getInt();//8
+		startKeys = buffer.getInt();//9
+		numKeys = buffer.getInt();//10
+		typeSym = buffer.getInt();//11
+		maxDef = buffer.getInt();//12
+		numDef = buffer.getInt();//13
+		referenceTableStart = buffer.getInt();//14
+		defaultTableStart = buffer.getInt();//15
+		valueLength = buffer.getInt();//16
+		nSave = buffer.getInt();//17
+		simLen = buffer.getInt();//18
+		childClass = buffer.getInt();//19
+		parentClass = buffer.getInt();//20
+		pos = buffer.getInt();//21
+		currPrnt = buffer.getInt();//22
+		defaultLength = buffer.getInt();//23
+		numTypes = buffer.getInt();//24
 		if (numTypes == 0) {
 			numTypes = 1;
 		}
 	}
 
+	public void write(ByteBuffer buffer) {
+		buffer.put(BinaryTools.packString(name, 16));
+		buffer.put(BinaryTools.packString(abbreviation, 8));
+		buffer.putInt(iop);
+		buffer.putInt(level);
+		buffer.putInt(startKeys);
+		buffer.putInt(numKeys);
+		buffer.putInt(typeSym);
+		buffer.putInt(maxDef);
+		buffer.putInt(numDef);
+		buffer.putInt(referenceTableStart);
+		buffer.putInt(defaultTableStart);
+		buffer.putInt(valueLength);
+		buffer.putInt(nSave);
+		buffer.putInt(valueLength); //Same as i3?
+		buffer.putInt(childClass);
+		buffer.putInt(parentClass);
+		buffer.putInt(pos);
+		buffer.putInt(currPrnt);
+		buffer.putInt(defaultLength);
+		if (numTypes == 1) {
+			buffer.putInt(0);
+		} else {
+			buffer.putInt(numTypes);
+		}
+	}
+
+	public int byteSize() {
+		return 16 + 8 + 18 * 4;
+	}
+
+	public void refreshStarts(CommandEntry prevWithDef, CommandEntry prevInRef) {
+		
+		if (hasDefaults()) {
+			startKeys = prevWithDef.endKeys() + lengthData.keywordStart() ;
+			defaultTableStart = prevWithDef.defaultTableEnd() + lengthData.defaultStart() ;
+			
+		}
+		
+		if(this.inRefTable()) {
+			referenceTableStart = prevInRef.referenceTableStart() +prevInRef.maxDef();
+		}
+	}
+
 	private void determineIfHasDefaults(CommandEntry previousEntry) {
 		/*
-		 * Deprecated commands from DOE2.1 still appear in the command table but
-		 * do not have entries in the default table. These can be identified by
-		 * having a defaultTableStart which is out of sequence with the previous
-		 * command.
+		 * Deprecated commands from DOE2.1 still appear in the command table but do not
+		 * have entries in the default table. These can be identified by having a
+		 * defaultTableStart which is out of sequence with the previous command.
 		 */
 
-		if(numKeys() > 0){
+		if (numKeys() > 0) {
 			if ((this.defaultTableStart() == previousEntry.defaultTableStart()
 					+ previousEntry.valueLength() * previousEntry.numTypes() * 4)) {
 				hasDefaults = true;
@@ -113,6 +158,14 @@ public class CommandEntry {
 			}
 		} else {
 			hasDefaults = false;
+		}
+	}
+	
+	public boolean inRefTable() {
+		if(typeSym == 0 || maxDef < 0) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 
@@ -144,6 +197,14 @@ public class CommandEntry {
 		return startKeys - lengthData.keywordStart();
 	}
 
+	public int endKeys() {
+		if (uniqueKeys()) {
+			return startKeys - lengthData.keywordStart() + numKeys() * numTypes();
+		} else {
+			return startKeys - lengthData.keywordStart() + numKeys();
+		}
+	}
+
 	public int numKeys() {
 		return numKeys;
 	}
@@ -162,6 +223,10 @@ public class CommandEntry {
 
 	public int defaultTableStart() {
 		return defaultTableStart - lengthData.defaultStart();
+	}
+
+	public int defaultTableEnd() {
+		return defaultTableStart - lengthData.defaultStart() + valueLength() * numTypes() * 4;
 	}
 
 	public int valueLength() {
@@ -194,6 +259,60 @@ public class CommandEntry {
 
 	public boolean hasDefaults() {
 		return hasDefaults;
+	}
+
+//	public void setValueLength(int valueLength) {
+//		this.valueLength = valueLength;
+//	}
+	
+	public ArrayList<Integer> addKeyword(KeywordEntry keyword, KeywordTable table) {		
+		ArrayList<Integer> keyInd = new ArrayList<Integer>();
+		if(uniqueKeys()) {
+			for(int i=0;i<numTypes();i++) {
+				keyInd.add(startKeys() + numKeys*(i+1) + i);
+				table.add(keyword,startKeys() + numKeys*(i+1) + i);
+			}
+		} else {
+			keyInd.add(endKeys());
+			table.add(keyword,endKeys());
+		}
+		numKeys++;
+		valueLength += keyword.length();
+		defaultLength += keyword.length();
+		simLen += keyword.length();
+		return keyInd;
+		//System.out.println("NEW LENGTH " + valueLength);
+	}
+	
+	public void setRefTableStart(int i) {
+		this.referenceTableStart = i;
+	}
+	
+	public void setDefTableStart(int i) {
+		this.defaultTableStart = i;
+	}
+
+	public String summary() {
+		StringBuilder summary = new StringBuilder();
+		summary.append("SUMMARY FOR " + name() + "\n");
+		summary.append("IOP: " + iop + "\n");
+		summary.append("LEVEL: " + level + "\n");
+		summary.append("START-KEYS: " + startKeys + "\n");
+		summary.append("NUMBER-OF-KEYWORDS: " + numKeys + "\n");
+		summary.append("TYPE-SYM: " + typeSym + "\n");
+		summary.append("MAX-DEF: " + maxDef + "\n");
+		summary.append("REFERENCE-TABLE-START: " + referenceTableStart + "\n");
+		summary.append("DEFAULT-TABLE-START: " + defaultTableStart + "\n");
+		summary.append("VALUE-LENGTH: " + valueLength + "\n");
+		summary.append("CHILD-CLASS: " + childClass + "\n");
+		summary.append("PARENT-CLASS: " + parentClass + "\n");
+		summary.append("DEFAULT-LENGTH: " + defaultLength + "\n");
+		summary.append("NUM-TYPES: " + numTypes + "\n");
+		summary.append("NUM-DEF: " + numDef + "\n");
+		summary.append("N-SAVE: " + nSave + "\n");
+		summary.append("SIM-LEN: " + simLen + "\n");
+		summary.append("POS: " + pos + "\n");
+		return summary.toString();
 	}
 
 }

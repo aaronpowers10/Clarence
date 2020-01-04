@@ -108,8 +108,17 @@ public class CommandTable {
 	public int indexOf(String name) {
 		for(int i=0;i<commands.size();i++) {
 			if(commands.get(i).name().toLowerCase().equals(name.toLowerCase())) {
+				//return commands.get(i).typeSym();
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public int typeSymOf(String name) {
+		for(int i=0;i<commands.size();i++) {
+			if(commands.get(i).name().toLowerCase().equals(name.toLowerCase())) {
 				return commands.get(i).typeSym();
-				
 			}
 		}
 		return -1;

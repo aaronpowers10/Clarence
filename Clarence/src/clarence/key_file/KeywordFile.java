@@ -395,6 +395,10 @@ public class KeywordFile {
 	public int indexOfCommand(String name) {
 		return commandTable.indexOf(name);
 	}
+	
+	public int typeSymOfCommand(String name) {
+		return commandTable.typeSymOf(name);
+	}
 
 
 }

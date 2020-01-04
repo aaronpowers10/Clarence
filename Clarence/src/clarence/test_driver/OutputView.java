@@ -9,6 +9,7 @@ public class OutputView extends TextArea {
 
 	public OutputView() {
 		super();
+		this.setStyle("-fx-font-family: monospace");
 		maxOutput = 200000;
 		outputSize = 0;
 	}

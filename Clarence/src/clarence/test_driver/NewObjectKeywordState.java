@@ -35,7 +35,7 @@ public class NewObjectKeywordState implements ApplicationState {
 			String name = in.next();
 			String abbr = in.next();
 			String allowedCom = in.next();
-			int comInd = file.indexOfCommand(allowedCom);
+			int comInd = file.typeSymOfCommand(allowedCom);
 			if(in.hasNext()) {
 				in.close();
 				throw new InvalidCommandException();

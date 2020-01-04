@@ -23,8 +23,8 @@ public class KeywordFormattedState implements ApplicationState{
 	}
 	
 	private void showMessage() {
-		//view.clearPrompt();
-		view.appendPrompt("");
+		view.clearPrompt();
+		//view.appendPrompt("");
 		view.appendPrompt("ENTER KEYWORD NUMBER OR NAME");
 	}
 

@@ -1,5 +1,6 @@
 package clarence.test_driver;
 
+import java.io.File;
 import java.io.IOException;
 
 import clarence.key_file.KeywordFile;
@@ -19,6 +20,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class KeyFileEditorView extends Application {
@@ -129,9 +131,14 @@ public class KeyFileEditorView extends Application {
 	private void load() {
 		try {
 			
-			//file = new KeywordFile("C:\\Users\\cpoweraa\\Documents\\eQUEST JCI Data\\DOE-2\\BDLKEY.BIN");
-			file = new KeywordFile("C:\\Users\\cpoweraa\\Documents\\eQUEST 3-65-7175 Data\\DOE-2\\Arch\\BDLKEY.BIN");
-			//file = new KeywordFile("C:\\Users\\cpoweraa\\Documents\\eQUEST 3-65-7175 Data\\DOE-2\\BDLKEY.BIN");
+			FileChooser fileChooser = new FileChooser();
+
+			fileChooser.getExtensionFilters().addAll(
+			     new FileChooser.ExtensionFilter("BIN File", "*.BIN")
+			);
+			
+			File keyFil = fileChooser.showOpenDialog(primaryStage);
+			file = new KeywordFile(keyFil.getAbsolutePath());
 			state = new RootApplicationState(this, file);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -141,7 +148,15 @@ public class KeyFileEditorView extends Application {
 
 	private void save() {
 		try {
-			file.write("C:\\doe22\\EXE48y\\BDLKEY_OUT.BIN");
+			FileChooser fileChooser = new FileChooser();
+
+			fileChooser.getExtensionFilters().addAll(
+			     new FileChooser.ExtensionFilter("BIN File", "*.BIN")
+			);
+			
+			File keyFil = fileChooser.showSaveDialog(primaryStage);
+			file = new KeywordFile(keyFil.getAbsolutePath());
+			file.write(keyFil.getAbsolutePath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

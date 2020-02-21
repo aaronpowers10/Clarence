@@ -1,5 +1,6 @@
 package clarence.test_driver;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import clarence.key_file.KeywordFile;
@@ -24,7 +25,7 @@ public class NewObjectKeywordState implements ApplicationState {
 	private void showMessage() {
 		view.clearPrompt();
 		//view.appendPrompt("");
-		view.appendPrompt("ENTER <NAME> <ABBREVIATION> <ALLOWED-COMMAND> FOR OBJECT KEYWORD");
+		view.appendPrompt("ENTER <NAME> <ABBREVIATION> <ALLOWED-COMMAND> <ALLOWED-TYPES...> FOR OBJECT KEYWORD");
 	}
 
 	@Override
@@ -36,6 +37,10 @@ public class NewObjectKeywordState implements ApplicationState {
 			String abbr = in.next();
 			String allowedCom = in.next();
 			int comInd = file.typeSymOfCommand(allowedCom);
+			ArrayList<Integer> allowedTypes = new ArrayList<Integer>();
+			while(in.hasNext()) {
+				allowedTypes.add(file.symbolIndexOf(in.next()));
+			}
 			if(in.hasNext()) {
 				in.close();
 				throw new InvalidCommandException();
@@ -43,7 +48,7 @@ public class NewObjectKeywordState implements ApplicationState {
 			CommandEntry command = file.getCommand(commandIndex);
 			KeywordEntry lastKey = file.getKeyword(commandIndex, command.endKeys() - command.startKeys() - 1);
 			int valPos = lastKey.valPos() + lastKey.length();
-			KeywordEntry keyword = KeywordEntryFactory.createObject(name, abbr, 1, comInd, valPos);
+			KeywordEntry keyword = KeywordEntryFactory.createObject(name, abbr, 1, comInd, valPos,allowedTypes);
 			ObjectDefaultCreator defaultCreator = new ObjectDefaultCreator();
 			file.addKeyword(command, keyword, defaultCreator);
 			in.close();

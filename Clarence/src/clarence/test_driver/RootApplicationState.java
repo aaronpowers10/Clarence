@@ -27,6 +27,7 @@ public class RootApplicationState implements ApplicationState {
 		view.appendPrompt("6. PRINT EXPRESSION TABLE SUMMARY" );
 		view.appendPrompt("7. SELECT EXPRESSION" );
 		view.appendPrompt("8. SELECT COMMAND" );
+		view.appendPrompt("9. CREATE COMMAND");
 	}
 
 	@Override
@@ -35,37 +36,33 @@ public class RootApplicationState implements ApplicationState {
 			int option = Integer.parseInt(command);
 			if (option == 1) {
 				view.clearOutput();
-				//view.appendOutput("");
 				view.appendOutput(file.lengthDataInfo());
 				view.setApplicationState(new RootApplicationState(view, file));
 			} else if (option == 2) {
 				view.clearOutput();
-				//view.appendOutput("");
 				view.appendOutput(file.symbolTableSummary());
 				view.setApplicationState(new RootApplicationState(view, file));
 			} else if (option == 3) {
 				view.clearOutput();
-				//view.appendOutput("");
 				view.appendOutput(file.keywordTableSummary());
 				view.setApplicationState(new RootApplicationState(view, file));
 			} else if (option == 4) {
 				view.clearOutput();
-				//view.appendOutput("");
 				view.appendOutput(file.commandTableSummary());
 				view.setApplicationState(new RootApplicationState(view, file));
 			} else if (option == 5) {
 				view.clearOutput();
-				//view.appendOutput("");
 				view.appendOutput(file.defaultTableSummary());
 				view.setApplicationState(new RootApplicationState(view, file));
 			} else if (option == 6) {
 				view.clearOutput();
-				//view.appendOutput("");
 				view.appendOutput(file.expressionTableSummary());
 			} else if (option == 7) {
 				view.setApplicationState(new ExpressionSelectionTypeState(view,file));
 			} else if (option == 8) {
 				view.setApplicationState(new SelectCommandState(view,file));
+			}else if (option == 9) {
+				view.setApplicationState(new CreateCommandState(view,file));
 			}else {
 				throw new InvalidCommandException();
 			}

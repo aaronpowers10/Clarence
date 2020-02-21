@@ -155,7 +155,6 @@ public class KeyFileEditorView extends Application {
 			);
 			
 			File keyFil = fileChooser.showSaveDialog(primaryStage);
-			file = new KeywordFile(keyFil.getAbsolutePath());
 			file.write(keyFil.getAbsolutePath());
 		} catch (IOException e) {
 			e.printStackTrace();

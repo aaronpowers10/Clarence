@@ -10,7 +10,7 @@ public class StringDefaultCreator implements DefaultCreator{
 	@Override
 	public void addDefault(ArrayList<Integer> type, ArrayList<Integer> value) {
 		type.add(1);
-		value.add(DoubleToInt.convert(0));	
+		value.add(-946345856);	
 	}
 
 }

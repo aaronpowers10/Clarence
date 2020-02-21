@@ -23,32 +23,36 @@ public class NewRealKeywordState implements ApplicationState {
 
 	private void showMessage() {
 		view.clearPrompt();
-		//view.appendPrompt("");
-		view.appendPrompt("ENTER <NAME> <ABBREVIATION> <MIN> <MAX> <DEFAULT> FOR REAL KEYWORD");
+		// view.appendPrompt("");
+		view.appendPrompt("ENTER <NAME> <ABBREVIATION> <MIN> <MAX> <DEFAULT> <UNITS> FOR REAL KEYWORD");
 	}
 
 	@Override
 	public void command(String commandStr) throws InvalidCommandException {
 		Scanner in = new Scanner(commandStr);
 		try {
-			
+
 			String name = in.next();
 			String abbr = in.next();
 			double min = in.nextDouble();
 			double max = in.nextDouble();
 			double def = in.nextDouble();
-			if(in.hasNext()) {
+			int units = in.nextInt();
+			if (in.hasNext()) {
 				in.close();
 				throw new InvalidCommandException();
 			}
 			CommandEntry command = file.getCommand(commandIndex);
-			KeywordEntry lastKey = file.getKeyword(commandIndex, command.endKeys() - command.startKeys() - 1);
-			int valPos = lastKey.valPos() + lastKey.length();
-			KeywordEntry keyword = KeywordEntryFactory.createReal(name, abbr, 1, min, max, valPos);
+			int valPos = 1;
+			if (command.numKeys() > 0) {
+				KeywordEntry lastKey = file.getKeyword(commandIndex, command.endKeys() - command.startKeys() - 1);
+				valPos = lastKey.valPos() + lastKey.length();
+			}
+			KeywordEntry keyword = KeywordEntryFactory.createReal(name, abbr, 1, min, max, valPos,units);
 			RealDefaultCreator defaultCreator = new RealDefaultCreator(def);
 			file.addKeyword(command, keyword, defaultCreator);
 			in.close();
-			view.setApplicationState(new CommandOptionsState(view,file,commandIndex));
+			view.setApplicationState(new CommandOptionsState(view, file, commandIndex));
 		} catch (NumberFormatException e) {
 			in.close();
 			throw new InvalidCommandException();

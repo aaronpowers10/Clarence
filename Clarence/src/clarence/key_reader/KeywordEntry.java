@@ -44,6 +44,17 @@ public class KeywordEntry {
 		this.max = max;
 		this.valPos = valPos;
 	}
+	
+	public KeywordEntry(String name, String abbreviation, int type, int length, int min, int max, int valPos, int units) {
+		this.name = name;
+		this.abbreviation = abbreviation;
+		this.type = type;
+		this.length = length;
+		this.min = min;
+		this.max = max;
+		this.valPos = valPos;
+		this.units = units;
+	}
 //	
 //	public KeywordEntry(String name, String abbreviation, int valPos) {
 //		this.name = name;
@@ -235,6 +246,10 @@ public class KeywordEntry {
 	
 	public float maxAsFloat() {
 		return IntToFloat.convert(max);
+	}
+	
+	public void setTypeCode(int typeCode) {
+		this.typeCode = typeCode;
 	}
 	
 	public String getRawInfo() {

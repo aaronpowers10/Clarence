@@ -23,7 +23,6 @@ public class NewCodewordKeywordState implements ApplicationState {
 
 	private void showMessage() {
 		view.clearPrompt();
-		//view.appendPrompt("");
 		view.appendPrompt("ENTER <NAME> <ABBREVIATION> <DEFAULT> <ALLOWED-VALUES>... FOR CODEWORD KEYWORD");
 	}
 

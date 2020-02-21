@@ -29,9 +29,6 @@ public class DefaultTable {
 		i1 = buffer.getInt();
 		i2 = buffer.getInt();
 		
-//		System.out.println("DEF TBL I1: " + i1);
-//		System.out.println("DEF TBL I2: " + i2);
-		
 		defaultEntries = new ArrayList<DefaultEntry>();
 		for (int i = 0; i < commandTable.size(); i++) {
 			if (commandTable.get(i).hasDefaults()) {
@@ -41,11 +38,13 @@ public class DefaultTable {
 	}
 
 	public void write(ByteBuffer buffer) {
-		//buffer.putInt(i1);
-		//buffer.putInt(i2);
 		for (DefaultEntry entry : defaultEntries) {
 			entry.write(buffer);
 		}
+	}
+	
+	public void addCommand(CommandEntry command) {
+		defaultEntries.add(new DefaultEntry(command));
 	}
 
 	public int byteSize() {
@@ -134,7 +133,7 @@ public class DefaultTable {
 	}
 	
 	public void add(DefaultCreator creator, String commandName) {
-		this.get(commandName).add(creator);
+		get(commandName).add(creator);
 	}
 	
 	public void offsetExpressions(int offset) {

@@ -117,5 +117,16 @@ public class SymbolTable {
 			symbols.add(newEntry);
 		}
 	}
+	
+	public int symbolIndexOf(String sym) {
+		int i =1;
+		for(SymbolEntry symbol: symbols) {
+			if(symbol.symbol().equals(sym)) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
+	}
 
 }

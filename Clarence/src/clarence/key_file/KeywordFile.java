@@ -110,6 +110,10 @@ public class KeywordFile {
 	    
 	}
 	
+	public LengthData lengthData() {
+		return lengthData;
+	}
+	
 	public int symbolTableLength() {
 		return lengthData.symbolTableLength();
 	}
@@ -341,6 +345,12 @@ public class KeywordFile {
 		
 	}
 	
+	public void addCommand(CommandEntry command) {
+		commandTable.add(command);
+		defaultTable.addCommand(command);
+		refresh();
+	}
+	
 	public int indexOf(int commandIndex, int keywordIndex) {
 		return getCommand(commandIndex).startKeys()-lengthData.keywordStart() + keywordIndex;
 	}
@@ -400,5 +410,8 @@ public class KeywordFile {
 		return commandTable.typeSymOf(name);
 	}
 
+	public int symbolIndexOf(String sym) {
+		return symbolTable.symbolIndexOf(sym);
+	}
 
 }

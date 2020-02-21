@@ -26,6 +26,15 @@ public class TypeDefaultEntry {
 	private ArrayList<Integer> value;
 	private ArrayList<Integer> i1,i2;
 	private int numVals;
+	
+	public TypeDefaultEntry() {	
+		type = new ArrayList<Integer>();
+		value = new ArrayList<Integer>();
+		i1 = new ArrayList<Integer>();
+		i2 = new ArrayList<Integer>();
+		numVals = 0;
+
+	}
 
 	public TypeDefaultEntry(ByteBuffer buffer, int numVals) {	
 		type = new ArrayList<Integer>();

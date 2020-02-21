@@ -35,6 +35,15 @@ public class DefaultEntry {
 		}
 	}
 	
+	public DefaultEntry(CommandEntry commandEntry) {
+		commandName = commandEntry.name();
+		defaultEntries = new ArrayList<TypeDefaultEntry>();
+		numTypes = commandEntry.numTypes();
+		for(int i=0;i<numTypes;i++){
+			defaultEntries.add(new TypeDefaultEntry());
+		}
+	}
+	
 	public void write(ByteBuffer buffer) {
 		for(TypeDefaultEntry entry: defaultEntries) {
 			entry.write(buffer);

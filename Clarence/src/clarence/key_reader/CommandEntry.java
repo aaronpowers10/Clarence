@@ -43,6 +43,30 @@ public class CommandEntry {
 	private LengthData lengthData;
 	private boolean hasDefaults;
 
+	public CommandEntry(String name, String abbreviation,int typeSym,CommandEntry prevWithDef,CommandEntry prevInRef, LengthData lengthData) {
+		this.lengthData = lengthData;
+		this.name = name;
+		this.abbreviation = abbreviation;
+		this.typeSym = typeSym;
+		
+		iop = 60;
+		level = 0;
+		numKeys = 0;
+		maxDef = 1024;
+		numDef = 0;
+		nSave = 0;
+		simLen = 0;
+		childClass = 0;
+		parentClass = 0;
+		pos = 0;
+		currPrnt = 0;
+		defaultLength = 0;
+		numTypes = 1;
+		hasDefaults = true;
+		
+		this.refreshStarts(prevWithDef, prevInRef);
+	}
+
 	public CommandEntry(ByteBuffer buffer, LengthData lengthData) {
 		this.lengthData = lengthData;
 		read(buffer);
@@ -75,26 +99,30 @@ public class CommandEntry {
 			e.printStackTrace();
 		}
 
-		iop = buffer.getInt();//7
-		level = buffer.getInt();//8
-		startKeys = buffer.getInt();//9
-		numKeys = buffer.getInt();//10
-		typeSym = buffer.getInt();//11
-		maxDef = buffer.getInt();//12
-		numDef = buffer.getInt();//13
-		referenceTableStart = buffer.getInt();//14
-		defaultTableStart = buffer.getInt();//15
-		valueLength = buffer.getInt();//16
-		nSave = buffer.getInt();//17
-		simLen = buffer.getInt();//18
-		childClass = buffer.getInt();//19
-		parentClass = buffer.getInt();//20
-		pos = buffer.getInt();//21
-		currPrnt = buffer.getInt();//22
-		defaultLength = buffer.getInt();//23
-		numTypes = buffer.getInt();//24
+		iop = buffer.getInt();// 7
+		level = buffer.getInt();// 8
+		startKeys = buffer.getInt();// 9
+		numKeys = buffer.getInt();// 10
+		typeSym = buffer.getInt();// 11
+		maxDef = buffer.getInt();// 12
+		numDef = buffer.getInt();// 13
+		referenceTableStart = buffer.getInt();// 14
+		defaultTableStart = buffer.getInt();// 15
+		valueLength = buffer.getInt();// 16
+		nSave = buffer.getInt();// 17
+		simLen = buffer.getInt();// 18
+		childClass = buffer.getInt();// 19
+		parentClass = buffer.getInt();// 20
+		pos = buffer.getInt();// 21
+		currPrnt = buffer.getInt();// 22
+		defaultLength = buffer.getInt();// 23
+		numTypes = buffer.getInt();// 24
 		if (numTypes == 0) {
 			numTypes = 1;
+		}
+		
+		if(name.equals("SPACE-TYPE")) {
+			typeSym = 59;
 		}
 	}
 
@@ -112,7 +140,7 @@ public class CommandEntry {
 		buffer.putInt(defaultTableStart);
 		buffer.putInt(valueLength);
 		buffer.putInt(nSave);
-		buffer.putInt(valueLength); //Same as i3?
+		buffer.putInt(valueLength); // Same as i3?
 		buffer.putInt(childClass);
 		buffer.putInt(parentClass);
 		buffer.putInt(pos);
@@ -130,15 +158,15 @@ public class CommandEntry {
 	}
 
 	public void refreshStarts(CommandEntry prevWithDef, CommandEntry prevInRef) {
-		
+
 		if (hasDefaults()) {
-			startKeys = prevWithDef.endKeys() + lengthData.keywordStart() ;
-			defaultTableStart = prevWithDef.defaultTableEnd() + lengthData.defaultStart() ;
-			
+			startKeys = prevWithDef.endKeys() + lengthData.keywordStart();
+			defaultTableStart = prevWithDef.defaultTableEnd() + lengthData.defaultStart();
+
 		}
-		
-		if(this.inRefTable()) {
-			referenceTableStart = prevInRef.referenceTableStart() +prevInRef.maxDef();
+
+		if (this.inRefTable()) {
+			referenceTableStart = prevInRef.referenceTableStart() + prevInRef.maxDef();
 		}
 	}
 
@@ -160,9 +188,9 @@ public class CommandEntry {
 			hasDefaults = false;
 		}
 	}
-	
+
 	public boolean inRefTable() {
-		if(typeSym == 0 || maxDef < 0) {
+		if (typeSym == 0 || maxDef < 0) {
 			return false;
 		} else {
 			return true;
@@ -264,30 +292,30 @@ public class CommandEntry {
 //	public void setValueLength(int valueLength) {
 //		this.valueLength = valueLength;
 //	}
-	
-	public ArrayList<Integer> addKeyword(KeywordEntry keyword, KeywordTable table) {		
+
+	public ArrayList<Integer> addKeyword(KeywordEntry keyword, KeywordTable table) {
 		ArrayList<Integer> keyInd = new ArrayList<Integer>();
-		if(uniqueKeys()) {
-			for(int i=0;i<numTypes();i++) {
-				keyInd.add(startKeys() + numKeys*(i+1) + i);
-				table.add(keyword,startKeys() + numKeys*(i+1) + i);
+		if (uniqueKeys()) {
+			for (int i = 0; i < numTypes(); i++) {
+				keyInd.add(startKeys() + numKeys * (i + 1) + i);
+				table.add(keyword, startKeys() + numKeys * (i + 1) + i);
 			}
 		} else {
 			keyInd.add(endKeys());
-			table.add(keyword,endKeys());
+			table.add(keyword, endKeys());
 		}
 		numKeys++;
 		valueLength += keyword.length();
 		defaultLength += keyword.length();
 		simLen += keyword.length();
 		return keyInd;
-		//System.out.println("NEW LENGTH " + valueLength);
+		// System.out.println("NEW LENGTH " + valueLength);
 	}
-	
+
 	public void setRefTableStart(int i) {
 		this.referenceTableStart = i;
 	}
-	
+
 	public void setDefTableStart(int i) {
 		this.defaultTableStart = i;
 	}

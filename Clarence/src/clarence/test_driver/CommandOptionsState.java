@@ -20,7 +20,6 @@ public class CommandOptionsState implements ApplicationState{
 	
 	private void showMessage() {
 		view.clearPrompt();
-		//view.appendPrompt("");
 		CommandEntry command = file.getCommand(commandIndex);
 		view.appendPrompt(("SELECT OPTION FOR COMMAND " + command.name() ));
 		view.appendPrompt(("1. PRINT COMMAND SUMMARY") );

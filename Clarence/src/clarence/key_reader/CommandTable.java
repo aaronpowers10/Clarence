@@ -57,6 +57,10 @@ public class CommandTable {
 		return commands.get(index);
 	}
 	
+	public void add(CommandEntry command) {
+		commands.add(command);
+	}
+	
 	public CommandEntry getOfType(int type){
 		for(int i=0;i<commands.size();i++){
 			if(commands.get(i).typeSym() == type){

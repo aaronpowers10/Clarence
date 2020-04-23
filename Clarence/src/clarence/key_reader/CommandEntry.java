@@ -121,9 +121,16 @@ public class CommandEntry {
 			numTypes = 1;
 		}
 		
-		if(name.equals("SPACE-TYPE")) {
-			typeSym = 59;
-		}
+		if(name.equals("SPACE")) {
+		//nSave = 30;
+		//	simLen = 20000;
+	}
+		
+//		if(name.equals("SPACE-TYPE")) {
+//			typeSym = 59;
+//			maxDef = 1024;
+//		}
+		
 	}
 
 	public void write(ByteBuffer buffer) {
@@ -140,7 +147,8 @@ public class CommandEntry {
 		buffer.putInt(defaultTableStart);
 		buffer.putInt(valueLength);
 		buffer.putInt(nSave);
-		buffer.putInt(valueLength); // Same as i3?
+		buffer.putInt(simLen);
+		//buffer.putInt(valueLength); // Same as i3?
 		buffer.putInt(childClass);
 		buffer.putInt(parentClass);
 		buffer.putInt(pos);

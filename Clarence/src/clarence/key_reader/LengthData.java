@@ -44,6 +44,7 @@ public class LengthData {
 		maxSymbols = buffer.getInt();
 		keywordEnd = buffer.getInt();
 		keywordStart = buffer.getInt();
+		System.out.println("KEY END " + keywordEnd);
 		commandTableLength = buffer.getInt();
 		defaultStart = buffer.getInt();
 		defaultEnd = buffer.getInt();
@@ -175,14 +176,25 @@ public class LengthData {
 		
 		int prevExprStart = expressionStart;
 		symbolTableLength = symbolTable.size();
+		System.out.println("SYM TABLE LENGTH " + symbolTableLength);
+		System.out.println("KEY START: " + keywordStart);
 		keywordEnd = keywordStart + (keywordTable.size()-1);
+		System.out.println("KEY END: " + keywordEnd);
 		defaultStart = 16*keywordEnd + 1;
+		System.out.println("DEF START "  + defaultStart);
 		commandTableLength = commandTable.size();
+		int idft = keywordEnd*16 + 1;
+		defaultEnd = 4*defaultTable.size()+idft-1;
+		System.out.println("IDFT: " + idft);
+		System.out.println("DEF END 1: " + defaultEnd);
 		defaultEnd = defaultStart + (defaultTable.byteSize()-12)/4;
-		expressionStart = defaultEnd + 3 + commandTable.maxDef()*5;
+		System.out.println("DEF END 2: " + defaultEnd);
+		//expressionStart = defaultEnd + 3 + commandTable.maxDef()*5;
+		expressionStart = defaultEnd  + 6 + commandTable.maxDef()*5;
 		expressionEnd = expressionStart + (expressionTable.byteSize()-16)/4;
 		totalSize = expressionEnd;
 		int offset = expressionStart - prevExprStart;
+		System.out.println("OFFSET " + offset);
 		return offset;
 	}
 

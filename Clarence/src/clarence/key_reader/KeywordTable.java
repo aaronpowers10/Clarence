@@ -25,6 +25,7 @@ public class KeywordTable {
 	private ArrayList<KeywordEntry> keywords;
 
 	public KeywordTable(ByteBuffer buffer, int size) {
+		System.out.println("KEY TABLE SIZE " + size);
 		keywords = new ArrayList<KeywordEntry>();
 		read(buffer, size);
 	}

@@ -133,6 +133,9 @@ public class KeywordEntry {
 		i1 = buffer.getInt();
 		typeCode = buffer.getInt();
 		i2 = buffer.getInt();
+//		if(def !=0 ) {
+//			System.out.println("DEF FOR " + name + " " + def);
+//		}
 //		if(i1 !=0) {
 //			System.out.println("I1 FOR " + name + " " + i1);
 //		}

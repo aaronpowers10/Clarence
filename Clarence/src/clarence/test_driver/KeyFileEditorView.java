@@ -139,6 +139,7 @@ public class KeyFileEditorView extends Application {
 			
 			File keyFil = fileChooser.showOpenDialog(primaryStage);
 			file = new KeywordFile(keyFil.getAbsolutePath());
+			file.refresh();
 			state = new RootApplicationState(this, file);
 		} catch (IOException e) {
 			e.printStackTrace();
